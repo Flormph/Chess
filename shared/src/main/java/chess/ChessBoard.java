@@ -18,7 +18,7 @@ public class ChessBoard {
         board = new_board.getBoard();
     }
 
-    ChessPiece[][] board; //new board
+    ChessPiece[][] board = new ChessPiece[8][8]; //new board
 
     /**
      * Adds a chess piece to the chessboard
@@ -27,6 +27,9 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) { //takes an already instantiated piece and places it on the board
+        if(board == null) {
+             board = new ChessPiece[8][8];
+        }
         if(getPiece(position) == null) { //checks if the location is empty (if not it will return null
             board[position.getRow() - 1][position.getColumn() - 1]  = (ChessPiece) piece;
         }
@@ -95,6 +98,7 @@ public class ChessBoard {
         Arrays.fill(board[1], whitePawn);
         Arrays.fill(board[6], blackPawn);
 
+        System.out.print(toString());
         return;
     }
 
@@ -128,5 +132,39 @@ public class ChessBoard {
 
     public void setPiece(ChessPosition pos, ChessPiece piece) {
         board[pos.getRow() - 1][pos.getColumn() - 1] = piece;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Arrays.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        for(int i = 8; i > 0; --i) {
+            for(int j = 1; j < 9; ++j) {
+                ChessPosition currPos = new ChessPosition(i,j);
+                ChessPiece currPiece = (ChessPiece) getPiece(currPos);
+                out.append('|');
+                if(currPiece != null) {
+                    out.append(getPiece(currPos).toString());
+                }
+                else {
+                    out.append(" ");
+                }
+                if(j == 8) {out.append('|');}
+            }
+            out.append('\n');
+        }
+        return out.toString();
     }
 }

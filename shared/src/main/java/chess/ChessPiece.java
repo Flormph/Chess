@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -11,7 +12,9 @@ import java.util.HashSet;
  */
 public class ChessPiece {
 
-    public ChessPiece(ChessGame.TeamColor teamColor, ChessPiece.PieceType type) {
+    public ChessPiece(ChessGame.TeamColor newTeamColor, ChessPiece.PieceType newType) {
+        teamColor = newTeamColor;
+        pieceType = newType;
     }
 
     private ChessGame.TeamColor teamColor;
@@ -45,6 +48,19 @@ public class ChessPiece {
 
     private boolean teamCheck(ChessGame.TeamColor color1, ChessGame.TeamColor color2) {
         return color1 == color2;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamColor, pieceType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return teamColor == that.teamColor && pieceType == that.pieceType;
     }
 
     private HashSet<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
@@ -577,5 +593,34 @@ public class ChessPiece {
                 break;
         }
         return pieceMoves;
+    }
+
+    @Override
+    public String toString() {
+        if(teamColor == ChessGame.TeamColor.BLACK) {
+            return switch (pieceType) {
+                case KING -> "k";
+                case QUEEN -> "q";
+                case BISHOP -> "b";
+                case KNIGHT -> "n";
+                case ROOK -> "r";
+                case PAWN -> "p";
+                default -> " ";
+            };
+        }
+        else if(teamColor == ChessGame.TeamColor.WHITE) {
+            return switch (pieceType) {
+                case KING -> "K";
+                case QUEEN -> "Q";
+                case BISHOP -> "B";
+                case KNIGHT -> "N";
+                case ROOK -> "R";
+                case PAWN -> "P";
+                default -> " ";
+            };
+        }
+        else {
+            return "";
+        }
     }
 }

@@ -167,4 +167,20 @@ public class ChessBoard {
         }
         return out.toString();
     }
+
+    void setBoard(ChessBoard newBoard) {
+        for(int i = 0; i < 8; ++i) {
+            for(int j = 0; j < 8; ++j) {
+                this.board[i][j] = newBoard.getBoard()[i][j];
+            }
+        }
+    }
+
+    void nullifyBoard() {
+        for(int i = 0; i < 8; ++i) {
+            for(int j = 0; j < 8; ++j) {
+                this.board[i][j] = null;
+            }
+        }
+    }
 }

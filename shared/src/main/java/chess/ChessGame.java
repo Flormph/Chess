@@ -13,6 +13,7 @@ import java.util.Objects;
 public class ChessGame {
     TeamColor currTeam = TeamColor.WHITE;
     ChessBoard board = new ChessBoard();
+    ChessBoard testBoard = new ChessBoard();
     HashSet<ChessPosition> whitePieces = new HashSet<ChessPosition>();
     HashSet<ChessPosition> blackPieces = new HashSet<ChessPosition>();
     HashSet<ChessPosition> dummyWhitePieces = new HashSet<ChessPosition>();
@@ -73,16 +74,17 @@ public class ChessGame {
     }
 
     private boolean validate(ChessMove p) {
-        ChessBoard tempBoard = new ChessBoard(board);
-        tempBoard.setPiece(p.getEndPosition(), (ChessPiece)tempBoard.getPiece(p.getStartPosition()));
-        tempBoard.setPiece(p.getStartPosition(), null);
+        testBoard.setBoard(board);
+        testBoard.setPiece(p.getEndPosition(), (ChessPiece)testBoard.getPiece(p.getStartPosition()));
+        testBoard.setPiece(p.getStartPosition(), null);
         if(currTeam == TeamColor.WHITE) {
-            if(isInCheck(TeamColor.WHITE, tempBoard)) {return false;}
+            if(isInCheck(TeamColor.WHITE, testBoard)) {return false;}
         }
         if(currTeam == TeamColor.BLACK) {
-            if(isInCheck(TeamColor.BLACK, tempBoard)) {return false;}
+            if(isInCheck(TeamColor.BLACK, testBoard)) {return false;}
         }
 
+        testBoard.nullifyBoard();
         return true;
     }
 
@@ -100,7 +102,7 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
         Collection<ChessMove> myMoves = validMoves(move.getStartPosition());
-        if(myMoves != null) {
+        if(!myMoves.isEmpty()) {
             if (myMoves.contains(move)) {
                 if(move.getPromotionPiece() != null) {
                     board.setPiece(move.getEndPosition(), new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
@@ -111,13 +113,14 @@ public class ChessGame {
                 board.setPiece(move.getStartPosition(), null);
             }
             else {
-                throw new InvalidMoveException("YOUR TRIED BUT YOU LIED YOUR PIECE IS WRONG (invalid move)");
+                throw new InvalidMoveException("Invalid Move");
             }
         }
         else {
-            throw new InvalidMoveException("YOUR TRIED BUT YOU LIED YOUR PIECE IS WRONG (invalid move)");
+            throw new InvalidMoveException("There are no valid moves for this piece");
         }
         changeTeam();
+        System.out.print(toString());
         return;
     }
 
@@ -203,7 +206,7 @@ public class ChessGame {
         if(teamColor == TeamColor.WHITE) {
             for(ChessPosition cp : whitePieces) {
                 Collection<ChessMove> myMoves = validMoves(cp);
-                if(myMoves != null) {
+                if(!myMoves.isEmpty()) {
                     if(!validMoves(cp).isEmpty()) {
                         return false;
                     }

@@ -11,11 +11,6 @@ import java.util.Arrays;
 public class ChessBoard {
 
     public ChessBoard() {
-        ChessPiece[][] board = new ChessPiece[8][8];
-    }
-
-    public ChessBoard(ChessBoard new_board) {
-        board = new_board.getBoard();
     }
 
     ChessPiece[][] board = new ChessPiece[8][8]; //new board
@@ -31,10 +26,7 @@ public class ChessBoard {
              board = new ChessPiece[8][8];
         }
         if(getPiece(position) == null) { //checks if the location is empty (if not it will return null
-            board[position.getRow() - 1][position.getColumn() - 1]  = (ChessPiece) piece;
-        }
-        else {
-            return; // maybe throw an exception later
+            board[position.getRow() - 1][position.getColumn() - 1]  = piece;
         }
     }
 
@@ -98,8 +90,7 @@ public class ChessBoard {
         Arrays.fill(board[1], whitePawn);
         Arrays.fill(board[6], blackPawn);
 
-        System.out.print(toString());
-        return;
+        System.out.print(this);
     }
 
     public ChessPosition findWhiteKing() {
@@ -153,7 +144,7 @@ public class ChessBoard {
         for(int i = 8; i > 0; --i) {
             for(int j = 1; j < 9; ++j) {
                 ChessPosition currPos = new ChessPosition(i,j);
-                ChessPiece currPiece = (ChessPiece) getPiece(currPos);
+                ChessPiece currPiece = getPiece(currPos);
                 out.append('|');
                 if(currPiece != null) {
                     out.append(getPiece(currPos).toString());

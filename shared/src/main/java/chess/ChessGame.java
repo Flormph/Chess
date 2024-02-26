@@ -75,7 +75,7 @@ public class ChessGame {
 
     private boolean validate(ChessMove p) {
         testBoard.setBoard(board);
-        testBoard.setPiece(p.getEndPosition(), (ChessPiece)testBoard.getPiece(p.getStartPosition()));
+        testBoard.setPiece(p.getEndPosition(), testBoard.getPiece(p.getStartPosition()));
         testBoard.setPiece(p.getStartPosition(), null);
         if(currTeam == TeamColor.WHITE) {
             if(isInCheck(TeamColor.WHITE, testBoard)) {return false;}
@@ -108,7 +108,7 @@ public class ChessGame {
                     board.setPiece(move.getEndPosition(), new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
                 }
                 else {
-                    board.setPiece(move.getEndPosition(), (ChessPiece) board.getPiece(move.getStartPosition()));
+                    board.setPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
                 }
                 board.setPiece(move.getStartPosition(), null);
             }
@@ -120,8 +120,7 @@ public class ChessGame {
             throw new InvalidMoveException("There are no valid moves for this piece");
         }
         changeTeam();
-        System.out.print(toString());
-        return;
+        System.out.print(this);
     }
 
     public void changeTeam() {
@@ -147,7 +146,7 @@ public class ChessGame {
             for(ChessPosition pos : blackPieces) {
                 for(ChessMove mov : board.getPiece(pos).pieceMoves(board,pos)){
                     ChessPosition currMove = mov.getEndPosition();
-                    if(Objects.equals(currMove, (ChessPosition)whiteKingPos)) {
+                    if(Objects.equals(currMove, whiteKingPos)) {
                         return true;
                     }
                 }
@@ -157,7 +156,7 @@ public class ChessGame {
             for(ChessPosition pos : whitePieces) {
                 for(ChessMove mov : board.getPiece(pos).pieceMoves(board,pos)){
                     ChessPosition currMove = mov.getEndPosition();
-                    if(Objects.equals(currMove, (ChessPosition)blackKingPos)) {
+                    if(Objects.equals(currMove, blackKingPos)) {
                         return true;
                     }
                 }
@@ -174,7 +173,7 @@ public class ChessGame {
             for(ChessPosition pos : dummyBlackPieces) {
                 for(ChessMove mov : board.getPiece(pos).pieceMoves(board,pos)){
                     ChessPosition currMove = mov.getEndPosition();
-                    if(Objects.equals(currMove, (ChessPosition)whiteKingPos)) {
+                    if(Objects.equals(currMove, whiteKingPos)) {
                         return true;
                     }
                 }
@@ -184,7 +183,7 @@ public class ChessGame {
             for(ChessPosition pos : dummyWhitePieces) {
                 for(ChessMove mov : board.getPiece(pos).pieceMoves(board,pos)){
                     ChessPosition currMove = mov.getEndPosition();
-                    if(Objects.equals(currMove, (ChessPosition)blackKingPos)) {
+                    if(Objects.equals(currMove, blackKingPos)) {
                         return true;
                     }
                 }
@@ -266,7 +265,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        this.board = (ChessBoard) board;
+        this.board = board;
         checkBoardPieces();
     }
 
@@ -317,7 +316,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        return (ChessBoard) board;
+        return board;
     }
 
     @Override

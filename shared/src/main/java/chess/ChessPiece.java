@@ -17,8 +17,8 @@ public class ChessPiece {
         pieceType = newType;
     }
 
-    private ChessGame.TeamColor teamColor;
-    private ChessPiece.PieceType pieceType;
+    private final ChessGame.TeamColor teamColor;
+    private final ChessPiece.PieceType pieceType;
 
     /**
      * The various different chess piece options
@@ -346,105 +346,97 @@ public class ChessPiece {
     }
     private HashSet<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition) {
         HashSet<ChessMove> pieceMoves = new HashSet<>();
-        loop : for (int i = 1; i < 8; ++i) { //casts an up-left ray for moves
-            if(9 > (myPosition.getRow() + i) && (myPosition.getColumn() - i) > 0) {//checks if move is in bounds
+        for (int i = 1; i < 8; ++i) { //casts an up-left ray for moves
+            if (9 > (myPosition.getRow() + i) && (myPosition.getColumn() - i) > 0) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(i, -i)) == null) {//checks if the space is empty and if so adds it to avaliable moves
                     ChessMove newMove = new ChessMove(myPosition, myPosition.edit(i, -i));
                     pieceMoves.add(newMove);
-                }
-                else { //if place is full, adds to avaliable moves and breaks the loop
-                    if(board.getPiece(myPosition.edit(i, -i)) == null) {
+                } else { //if place is full, adds to avaliable moves and breaks the loop
+                    if (board.getPiece(myPosition.edit(i, -i)) == null) {
                         ChessMove newMove = new ChessMove(myPosition, myPosition.edit(i, -i));
                         pieceMoves.add(newMove);
                     }
-                    if(board.getPiece(myPosition.edit(i, -i)) != null) {
-                        if(!teamCheck(teamColor, board.getPiece(myPosition.edit(i,-i)).getTeamColor())) {
+                    if (board.getPiece(myPosition.edit(i, -i)) != null) {
+                        if (!teamCheck(teamColor, board.getPiece(myPosition.edit(i, -i)).getTeamColor())) {
                             ChessMove newMove = new ChessMove(myPosition, myPosition.edit(i, -i));
                             pieceMoves.add(newMove);
                         }
                     }
                     break;
                 }
-            }
-            else {
+            } else {
 
                 break;
             }
         }
 
-        loop : for (int i = 1; i < 8; ++i) { //casts an up-right ray for moves
-            if(myPosition.getRow() + i < 9 && myPosition.getColumn() + i < 9) {//checks if move is in bounds
+        for (int i = 1; i < 8; ++i) { //casts an up-right ray for moves
+            if (myPosition.getRow() + i < 9 && myPosition.getColumn() + i < 9) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(i, i)) == null) {//checks if the space is empty and if so adds it to avaliable moves
                     ChessMove newMove = new ChessMove(myPosition, myPosition.edit(i, i));
                     pieceMoves.add(newMove);
-                }
-                else { //if place is full, adds to avaliable moves and breaks the loop
-                    if(board.getPiece(myPosition.edit(i, i)) == null) {
+                } else { //if place is full, adds to avaliable moves and breaks the loop
+                    if (board.getPiece(myPosition.edit(i, i)) == null) {
                         ChessMove newMove = new ChessMove(myPosition, myPosition.edit(i, i));
                         pieceMoves.add(newMove);
                     }
-                    if(board.getPiece(myPosition.edit(i, i)) != null) {
-                        if(!teamCheck(teamColor, board.getPiece(myPosition.edit(i,i)).getTeamColor())) {
+                    if (board.getPiece(myPosition.edit(i, i)) != null) {
+                        if (!teamCheck(teamColor, board.getPiece(myPosition.edit(i, i)).getTeamColor())) {
                             ChessMove newMove = new ChessMove(myPosition, myPosition.edit(i, i));
                             pieceMoves.add(newMove);
                         }
                     }
                     break;
                 }
-            }
-            else {
+            } else {
 
                 break;
             }
         }
 
-        loop : for (int i = 1; i < 8; ++i) { //casts a down-right ray for moves
-            if(myPosition.getRow() - i > 0 && 9 > myPosition.getColumn() + i) {//checks if move is in bounds
+        for (int i = 1; i < 8; ++i) { //casts a down-right ray for moves
+            if (myPosition.getRow() - i > 0 && 9 > myPosition.getColumn() + i) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(-i, i)) == null) {//checks if the space is empty and if so adds it to avaliable moves
                     ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, i));
                     pieceMoves.add(newMove);
-                }
-                else { //if place is full, adds to avaliable moves and breaks the loop
-                    if(board.getPiece(myPosition.edit(-i, i)) == null) {
+                } else { //if place is full, adds to avaliable moves and breaks the loop
+                    if (board.getPiece(myPosition.edit(-i, i)) == null) {
                         ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, i));
                         pieceMoves.add(newMove);
                     }
-                    if(board.getPiece(myPosition.edit(-i, i)) != null) {
-                        if(!teamCheck(teamColor, board.getPiece(myPosition.edit(-i,i)).getTeamColor())) {
+                    if (board.getPiece(myPosition.edit(-i, i)) != null) {
+                        if (!teamCheck(teamColor, board.getPiece(myPosition.edit(-i, i)).getTeamColor())) {
                             ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, i));
                             pieceMoves.add(newMove);
                         }
                     }
                     break;
                 }
-            }
-            else {
+            } else {
 
                 break;
             }
         }
 
-        loop : for (int i = 1; i < 8; ++i) { //casts a down-left ray for moves
-            if(0 < myPosition.getRow() - i && 0 < myPosition.getColumn() - i) {//checks if move is in bounds
+        for (int i = 1; i < 8; ++i) { //casts a down-left ray for moves
+            if (0 < myPosition.getRow() - i && 0 < myPosition.getColumn() - i) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(-i, -i)) == null) {//checks if the space is empty and if so adds it to avaliable moves
                     ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, -i));
                     pieceMoves.add(newMove);
-                }
-                else { //if place is full, adds to avaliable moves and breaks the loop
-                    if(board.getPiece(myPosition.edit(-i, -i)) == null) {
+                } else { //if place is full, adds to avaliable moves and breaks the loop
+                    if (board.getPiece(myPosition.edit(-i, -i)) == null) {
                         ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, -i));
                         pieceMoves.add(newMove);
                     }
-                    if(board.getPiece(myPosition.edit(-i, -i)) != null) {
-                        if(!teamCheck(teamColor, board.getPiece(myPosition.edit(-i,-i)).getTeamColor())) {
+                    if (board.getPiece(myPosition.edit(-i, -i)) != null) {
+                        if (!teamCheck(teamColor, board.getPiece(myPosition.edit(-i, -i)).getTeamColor())) {
                             ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, -i));
                             pieceMoves.add(newMove);
                         }
                     }
                     break;
                 }
-            }
-            else {
+            } else {
 
                 break;
             }
@@ -454,7 +446,6 @@ public class ChessPiece {
 
     private HashSet<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition) {
         HashSet<ChessMove> pieceMoves = new HashSet<>();
-        loop:
         for (int i = 1; i < 8; ++i) { //casts a left ray for moves
             if (0 < (myPosition.getColumn() - i)) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(0, -i)) == null) {//checks if the space is empty and if so adds it to avaliable moves
@@ -478,7 +469,6 @@ public class ChessPiece {
                 break;
             }
         }
-        loop:
         for (int i = 1; i < 8; ++i) { //casts an up ray for moves
             if (myPosition.getRow() + i < 9) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(i, 0)) == null) {//checks if the space is empty and if so adds it to avaliable moves
@@ -502,7 +492,6 @@ public class ChessPiece {
                 break;
             }
         }
-        loop:
         for (int i = 1; i < 8; ++i) { //casts a right ray for moves
             if (myPosition.getColumn() + i < 9) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(0, i)) == null) {//checks if the space is empty and if so adds it to avaliable moves
@@ -526,27 +515,25 @@ public class ChessPiece {
                 break;
             }
         }
-        loop : for (int i = 1; i < 8; ++i) { //casts a down ray for moves
-            if(0 < myPosition.getRow() - i) {//checks if move is in bounds
+        for (int i = 1; i < 8; ++i) { //casts a down ray for moves
+            if (0 < myPosition.getRow() - i) {//checks if move is in bounds
                 if (board.getPiece(myPosition.edit(-i, 0)) == null) {//checks if the space is empty and if so adds it to avaliable moves
                     ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, 0));
                     pieceMoves.add(newMove);
-                }
-                else { //if place is full, adds to avaliable moves and breaks the loop
-                    if(board.getPiece(myPosition.edit(-i, 0)) == null) {
+                } else { //if place is full, adds to avaliable moves and breaks the loop
+                    if (board.getPiece(myPosition.edit(-i, 0)) == null) {
                         ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, 0));
                         pieceMoves.add(newMove);
                     }
-                    if(board.getPiece(myPosition.edit(-i, 0)) != null) {
-                        if(!teamCheck(teamColor, board.getPiece(myPosition.edit(-i,0)).getTeamColor())) {
+                    if (board.getPiece(myPosition.edit(-i, 0)) != null) {
+                        if (!teamCheck(teamColor, board.getPiece(myPosition.edit(-i, 0)).getTeamColor())) {
                             ChessMove newMove = new ChessMove(myPosition, myPosition.edit(-i, 0));
                             pieceMoves.add(newMove);
                         }
                     }
                     break;
                 }
-            }
-            else {
+            } else {
 
                 break;
             }

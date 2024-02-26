@@ -2,15 +2,12 @@ package server;
 
 import spark.*;
 
-import java.nio.file.Paths;
-
 public class Server {
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        var webDir = Paths.get(Server.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "web");
-        Spark.externalStaticFileLocation(webDir.toString());
+        Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
 
@@ -20,5 +17,6 @@ public class Server {
 
     public void stop() {
         Spark.stop();
+        Spark.awaitStop();
     }
 }

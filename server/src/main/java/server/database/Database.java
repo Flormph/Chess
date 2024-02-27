@@ -61,6 +61,15 @@ public class Database {
         return false;
     }
 
+    public boolean deleteGame(int gameID) {
+        for(Records.GameData g: games) {
+            if(Objects.equals(g.gameID(), gameID)) {
+                games.remove(g);
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean deleteAllGames() {
         games.clear();
         return true;
@@ -91,7 +100,7 @@ public class Database {
         return true;
     }
 
-    public boolean addAuthToken(String userName, Records.AuthData token) {
+    public boolean addAuthToken(Records.AuthData token) {
         if(tokens.contains(token)) {
             return false;
         }
@@ -101,7 +110,16 @@ public class Database {
         }
     }
 
-    public boolean deleteAuthToken(String userName, Records.AuthData token) {
+    public String getToken(String auth) {
+        for (Records.AuthData a : tokens) {
+            if(Objects.equals(a.authToken(), auth)) {
+                return a.username();
+            }
+        }
+        return null;
+    }
+
+    public boolean deleteAuthToken(Records.AuthData token) {
         if(tokens.contains(token)) {
             tokens.remove(token);
             return true;

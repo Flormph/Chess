@@ -38,10 +38,10 @@ public class Service extends server.extenders.Service{
         else if(!gameDAO.findGame(Integer.parseInt(request.gameID))) {
             throw new DataAccessException("Error: game doesn't exist", 400);
         }
-        else if(Objects.equals(team, ChessGame.TeamColor.WHITE) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).whiteUsername(), "")) {
+        else if(Objects.equals(team, ChessGame.TeamColor.WHITE) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).whiteUsername(), null)) {
             throw new DataAccessException("Error: already taken", 403);
         }
-        else if(Objects.equals(team, ChessGame.TeamColor.BLACK) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).blackUsername(), "")) {
+        else if(Objects.equals(team, ChessGame.TeamColor.BLACK) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).blackUsername(), null)) {
             throw new DataAccessException("Error: already taken", 403);
         }
         else {

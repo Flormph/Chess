@@ -19,18 +19,27 @@ public class Response {
 
     protected Response(int dummy, String returnString) {
         successful = true;
-        returnString1 = returnString;
+        authToken = returnString;
         this.message = null;
     }
 
     protected Response(String return1, String return2) {
         successful = true;
-        returnString1 = return1;
-        returnString2 = return2;
+        username = return1;
+        authToken = return2;
         this.message = null;
+    }
+
+    protected Response(int return1) {
+        successful = true;
+        gameID = Integer.toString(return1);
+        this.message = null;
+        username = null;
+        authToken = null;
     }
     boolean successful;
     String message;
-    String returnString1;
-    String returnString2;
+    String username;
+    String authToken;
+    String gameID;
 }

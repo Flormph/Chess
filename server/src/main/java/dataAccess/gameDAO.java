@@ -2,11 +2,12 @@ package dataAccess;
 
 import model.Records;
 import server.database.Database;
+import chess.*;
 
 public class gameDAO {
-    static int createGame(Records.GameData game) {
-       server.database.Database.getInstance().addGame(game.gameName(), game);
-       return game.gameID();
+    public static int createGame(Records.GameData game) {
+        server.database.Database.getInstance().addGame(game.gameName(), game);
+        return game.gameID();
     }
 
     static Records.GameData getGame(int id) {

@@ -28,6 +28,11 @@ public class Server {
             server.logout.Handler handler = new server.logout.Handler();
             return handler.Handle(request, response);
         });
+
+        Spark.post("/game", (request, response) -> {
+            server.createGame.Handler handler = new server.createGame.Handler();
+            return handler.Handle(request, response);
+        });
         /*
 
         Spark.get("/game", (request, response) -> {
@@ -35,10 +40,7 @@ public class Server {
             return handler.Handler(request, response);
         });
 
-        Spark.post("/game", (request, response) -> {
-            CreateGameHandler handler = new CreateGameHandler();
-            return handler.Handler(request, response);
-        });
+
 
         Spark.put("/game", (request, response) -> {
             JoinGameHandler handler = new JoinGameHandler();

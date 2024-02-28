@@ -19,6 +19,16 @@ public class Service extends server.extenders.Service{
      * @return returns success response or a fail response
      */
     public Response joinGame(Request request) throws DataAccessException {
+        ChessGame.TeamColor team;
+        if(Objects.equals(request.playerColor, "WHITE")) {
+            team = ChessGame.TeamColor.WHITE;
+        }
+        if(Objects.equals(request.playerColor, "BLACK")) {
+            team = ChessGame.TeamColor.BLACK;
+        }
+        else {
+            team = null;
+        }
         String username = authDAO.getAuth(request.auth);
         int ID = Integer.parseInt(request.gameID);
         if(request.gameID == null || request.gameID.isEmpty()) {
@@ -28,12 +38,12 @@ public class Service extends server.extenders.Service{
             throw new DataAccessException("Error: unauthorized", 401);
         }
         else if(!gameDAO.findGame(Integer.parseInt(request.gameID))) {
-            throw new DataAccessException("Error: game doesn't exist, 500");
+            throw new DataAccessException("Error: game doesn't exist", 400);
         }
-        else if(Objects.equals(request.playerColor, "WHITE") && (gameDAO.getGame(Integer.parseInt(request.gameID))).whiteUsername() != null) {
+        else if(Objects.equals(team, ChessGame.TeamColor.WHITE) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).whiteUsername(), "")) {
             throw new DataAccessException("Error: already taken", 403);
         }
-        else if(Objects.equals(request.playerColor, "BLACK") && (gameDAO.getGame(Integer.parseInt(request.gameID))).blackUsername() != null) {
+        else if(Objects.equals(team, ChessGame.TeamColor.BLACK) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).blackUsername(), "")) {
             throw new DataAccessException("Error: already taken", 403);
         }
         else {

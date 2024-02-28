@@ -108,6 +108,11 @@ public class Database {
         }
     }
 
+    /**
+     *
+     * @param auth token of the current user
+     * @return username of the current user
+     */
     public String getToken(String auth) {
         for (Records.AuthData a : tokens) {
             if(Objects.equals(a.authToken(), auth)) {
@@ -146,6 +151,35 @@ public class Database {
             }
         }
         return false;
+    }
+
+    public boolean containsGame(int gameID) {
+        for(Records.GameData g: games) {
+            if(Objects.equals(g.gameID(), gameID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setWhitePlayer(int ID, String userName) {
+        for(Records.GameData g : games) {
+            if(g.gameID() == ID) {
+                g = new Records.GameData(g.gameID(),userName, g.blackUsername(),g.gameName(),g.game());
+            }
+        }
+    }
+
+    public void setBlackPlayer(int ID, String userName) {
+        for(Records.GameData g : games) {
+            if(g.gameID() == ID) {
+                g = new Records.GameData(g.gameID(), g.whiteUsername(), userName ,g.gameName(),g.game());
+            }
+        }
+    }
+
+    public void addObserver(int ID, String userName) {
+        return; //TODO implement observers in later stages
     }
 
     public int getGameID() {

@@ -30,6 +30,7 @@ public class ChessGame {
         return currTeam;
     }
 
+
     /**
      * Set's which teams turn it is
      *

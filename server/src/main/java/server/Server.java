@@ -33,21 +33,16 @@ public class Server {
             server.createGame.Handler handler = new server.createGame.Handler();
             return handler.Handle(request, response);
         });
-        /*
-
-        Spark.get("/game", (request, response) -> {
-            ListGameHandler handler = new ListGameHandler();
-            return handler.Handler(request, response);
-        });
-
-
 
         Spark.put("/game", (request, response) -> {
-            JoinGameHandler handler = new JoinGameHandler();
-            return handler.Handler(request, response);
+            server.join.Handler handler = new server.join.Handler();
+            return handler.Handle(request, response);
         });
 
-         */
+        Spark.get("/game", (request, response) -> {
+            server.list.Handler handler = new server.list.Handler();
+            return handler.Handle(request, response);
+        });
 
         // Register your endpoints and handle exceptions here.
 

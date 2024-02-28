@@ -1,5 +1,9 @@
 package server.extenders;
 
+import model.Records;
+
+import java.util.ArrayList;
+
 public class Response {
     /**
      * default constructor for parent class;
@@ -37,9 +41,17 @@ public class Response {
         username = null;
         authToken = null;
     }
+
+
+    protected Response(ArrayList<Records.GameData> games) {
+        successful = true;
+        this.message = null;
+        this.games = games;
+    }
     boolean successful;
     String message;
     String username;
     String authToken;
     String gameID;
+    ArrayList<Records.GameData> games;
 }

@@ -11,6 +11,12 @@ public class authDAO {
      * @return Returns the token associated with the newly logged-in user
      */
     public static String createAuth(String username) {
+        String token = null;
+        do { //this loop grabs a new token if the generated one is already in the server
+            token = UUID.randomUUID().toString();
+        }
+        while (server.database.Database.getInstance().hasToken(token));
+
         Records.AuthData auth = new Records.AuthData(UUID.randomUUID().toString(), username);
         server.database.Database.getInstance().addAuthToken(auth);
         return auth.authToken();

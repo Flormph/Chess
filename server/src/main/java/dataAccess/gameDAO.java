@@ -5,6 +5,7 @@ import server.database.Database;
 import chess.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class gameDAO {
     public static int createGame(Records.GameData game) {
@@ -36,7 +37,8 @@ public class gameDAO {
         server.database.Database.getInstance().addObserver(ID, userName);
     }
 
-    public static ArrayList<Records.GameData> getList(String auth) {
-        return server.database.Database.getInstance().getGames();
+    public static HashSet<Records.GameData> getList(String auth) {
+        HashSet<Records.GameData> list = new HashSet<>(server.database.Database.getInstance().getGames());
+        return list;
     }
 }

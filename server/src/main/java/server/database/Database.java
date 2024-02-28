@@ -163,17 +163,22 @@ public class Database {
     }
 
     public void setWhitePlayer(int ID, String userName) {
-        for(Records.GameData g : games) {
-            if(g.gameID() == ID) {
-                g = new Records.GameData(g.gameID(),userName, g.blackUsername(),g.gameName(),g.game());
+        for (int i = 0; i < games.size(); i++) {
+            Records.GameData g = games.get(i);
+            if (g.gameID() == ID) {
+                Records.GameData updatedGame = new Records.GameData(g.gameID(), userName, g.blackUsername(), g.gameName(), g.game());
+                games.set(i, updatedGame);
             }
         }
     }
 
+
     public void setBlackPlayer(int ID, String userName) {
-        for(Records.GameData g : games) {
-            if(g.gameID() == ID) {
-                g = new Records.GameData(g.gameID(), g.whiteUsername(), userName ,g.gameName(),g.game());
+        for (int i = 0; i < games.size(); i++) {
+            Records.GameData g = games.get(i);
+            if (g.gameID() == ID) {
+                Records.GameData updatedGame = new Records.GameData(g.gameID(), g.whiteUsername(), userName, g.gameName(), g.game());
+                games.set(i, updatedGame);
             }
         }
     }

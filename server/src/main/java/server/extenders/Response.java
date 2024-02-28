@@ -3,6 +3,7 @@ package server.extenders;
 import model.Records;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Response {
     /**
@@ -43,7 +44,7 @@ public class Response {
     }
 
 
-    protected Response(ArrayList<Records.GameData> games) {
+    protected Response(HashSet<Records.GameData> games) {
         successful = true;
         this.message = null;
         this.games = games;
@@ -53,5 +54,5 @@ public class Response {
     String username;
     String authToken;
     String gameID;
-    ArrayList<Records.GameData> games;
+    HashSet<Records.GameData> games;
 }

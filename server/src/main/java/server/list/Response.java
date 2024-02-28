@@ -1,6 +1,9 @@
 package server.list;
 
+import model.Records;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Response extends server.extenders.Response{
     public Response() {super();}
@@ -11,6 +14,6 @@ public class Response extends server.extenders.Response{
     public Response(String errorMessage) {
         super(errorMessage);
     }
-    public Response(ArrayList games) {super(games); }
+    public Response(HashSet<Records.GameData> games) {super(games); }
 
 }

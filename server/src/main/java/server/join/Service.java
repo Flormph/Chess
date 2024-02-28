@@ -4,10 +4,8 @@ import chess.ChessGame;
 import dataAccess.DataAccessException;
 import dataAccess.authDAO;
 import dataAccess.gameDAO;
-import model.Records;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * ClearApplicationService - Clears the database. Removes all users, games, and authTokens.
@@ -20,10 +18,10 @@ public class Service extends server.extenders.Service{
      */
     public Response joinGame(Request request) throws DataAccessException {
         ChessGame.TeamColor team;
-        if(Objects.equals(request.playerColor, "WHITE")) {
+        if(Objects.equals(request.playerColor, ChessGame.TeamColor.WHITE)) {
             team = ChessGame.TeamColor.WHITE;
         }
-        if(Objects.equals(request.playerColor, "BLACK")) {
+        if(Objects.equals(request.playerColor, ChessGame.TeamColor.BLACK)) {
             team = ChessGame.TeamColor.BLACK;
         }
         else {
@@ -47,11 +45,11 @@ public class Service extends server.extenders.Service{
             throw new DataAccessException("Error: already taken", 403);
         }
         else {
-            if(Objects.equals(request.playerColor, "WHITE")) {
+            if(Objects.equals(request.playerColor, ChessGame.TeamColor.WHITE)) {
                 gameDAO.setWhitePlayer(ID, username);
                 return new Response();
             }
-            else if(Objects.equals(request.playerColor, "BLACK")) {
+            else if(Objects.equals(request.playerColor, ChessGame.TeamColor.BLACK)) {
                 gameDAO.setBlackPlayer(ID, username);
                 return new Response();
             }

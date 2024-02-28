@@ -87,7 +87,7 @@ public class tests {
     }
 
     @Test
-    @DisplayName("Games can be created")
+    @DisplayName("Games must have a name")
     public void badCreateGame() throws TestException, DataAccessException {
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
@@ -102,5 +102,48 @@ public class tests {
         }
 
         assertNull(response2);
+    }
+
+    @Test
+    @DisplayName("Users can join a game")
+    public void joinGame() {
+        Request request = new Request("name", "password", "email");
+        Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
+        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+
+        server.createGame.Request request2 = new server.createGame.Request("game name", response.authToken);
+        Records.GameData gameData = new Records.GameData(1234, null, null, "game name", testChessGame);
+        server.createGame.Response response2 = new server.createGame.Response(gameDAO.createGame(gameData));
+
+        server.join.Request request1 = new server.join.Request(ChessGame.TeamColor.WHITE, "1234");
+        request1.auth = response.authToken;
+        try {
+            server.join.Response response1 = server.join.Service.joinGame(request1);
+        } catch (DataAccessException e) {
+        }
+
+        assertEquals(gameDAO.getGame(1234).whiteUsername(), "name");
+    }
+
+    @Test
+    @DisplayName("Users cant join as a filled slot")
+    public void badJoinGame() {
+        Request request = new Request("name", "password", "email");
+        Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
+        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+
+        Records.GameData gameData = new Records.GameData(1234, "already taken", null, "game name", testChessGame);
+        gameDAO.createGame(gameData);
+
+        server.join.Request request1 = new server.join.Request(ChessGame.TeamColor.WHITE, "1234");
+        request1.auth = response.authToken;
+
+        try {
+            server.join.Response response1 = server.join.Service.joinGame(request1);
+        } catch (DataAccessException e) {
+            gameDAO.setWhitePlayer(1234, "already taken");
+        }
+
+        assertNotEquals(gameDAO.getGame(1234).whiteUsername(), "name");
     }
 }

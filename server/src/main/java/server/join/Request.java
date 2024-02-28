@@ -6,7 +6,7 @@ public class Request {
     public ChessGame.TeamColor playerColor;
     public String gameID;
     public String auth;
-    Request(ChessGame.TeamColor playerColor, String gameID) {
+    public Request(ChessGame.TeamColor playerColor, String gameID) {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }

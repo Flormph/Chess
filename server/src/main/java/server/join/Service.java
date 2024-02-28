@@ -16,12 +16,12 @@ public class Service extends server.extenders.Service{
      * @param request provided username, password, and email to create a user from
      * @return returns success response or a fail response
      */
-    public Response joinGame(Request request) throws DataAccessException {
+    public static Response joinGame(Request request) throws DataAccessException {
         ChessGame.TeamColor team;
         if(Objects.equals(request.playerColor, ChessGame.TeamColor.WHITE)) {
             team = ChessGame.TeamColor.WHITE;
         }
-        if(Objects.equals(request.playerColor, ChessGame.TeamColor.BLACK)) {
+        else if(Objects.equals(request.playerColor, ChessGame.TeamColor.BLACK)) {
             team = ChessGame.TeamColor.BLACK;
         }
         else {

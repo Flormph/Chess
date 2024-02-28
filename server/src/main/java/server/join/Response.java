@@ -1,7 +1,5 @@
 package server.join;
 
- /* ClearApplicationResponse - stores possible responses for ClearApplication
-         */
 public class Response extends server.extenders.Response{
     public Response() {super();}
     /**

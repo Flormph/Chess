@@ -52,7 +52,11 @@ public class Response {
     boolean successful;
     String message;
     String username;
-    String authToken;
+    public String authToken;
     String gameID;
     HashSet<Records.GameData> games;
+
+    public String getMessage() {
+        return message;
+    }
 }

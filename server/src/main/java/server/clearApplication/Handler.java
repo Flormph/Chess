@@ -14,17 +14,17 @@ public class Handler extends server.extenders.Handler{
 
     public String Handle(Request Srequest, Response Sresponse) {
         server.clearApplication.Request request = serializer.fromJson(Srequest.body(), server.clearApplication.Request.class);
+        server.clearApplication.Response response;
         try {
             server.clearApplication.Service service = new server.clearApplication.Service();
-            service.clearApplication(request);
+            response = Service.clearApplication(request);
         } catch(DataAccessException e) {
             //TODO A FLIP OR NOT TODO A FLIP (MAKE RESPONSE OBJECT FOR FAILURE
-            server.clearApplication.Response response = new server.clearApplication.Response();
+            response = new server.clearApplication.Response();
             Sresponse.body(serializer.toJson(response));
             Sresponse.status(e.getCode());
             return Sresponse.body();
         }
-        server.clearApplication.Response response = new server.clearApplication.Response();
         Sresponse.body(serializer.toJson(response));
         Sresponse.status(200);
         return Sresponse.body();

@@ -1,6 +1,7 @@
 package server.clearApplication;
 
 import dataAccess.DataAccessException;
+import dataAccess.gameDAO;
 
 /**
  * ClearApplicationService - Clears the database. Removes all users, games, and authTokens.
@@ -11,8 +12,7 @@ public class Service extends server.extenders.Service{
      * @param request - A ClearApplicationRequest object containing information for the request.
      * @return ClearApplicationResponse return of either success or failure
      */
-    public server.clearApplication.Response clearApplication(Request request) throws DataAccessException {
-        database.clearApplication();
-        return new Response();
+    public static server.clearApplication.Response clearApplication(Request request) throws DataAccessException {
+        return gameDAO.clearApplication();
     }
 }

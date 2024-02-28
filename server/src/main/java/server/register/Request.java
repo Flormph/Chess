@@ -20,7 +20,7 @@ public class Request {
      * @param password password for new user
      * @param email email for new user
      */
-    Request(String username, String password, String email) {
+    public Request(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;

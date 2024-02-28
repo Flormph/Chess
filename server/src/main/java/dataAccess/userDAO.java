@@ -12,7 +12,7 @@ public class userDAO {
         server.database.Database.getInstance().deleteUser(username);
     }
 
-    static Records.UserData getUser(String username) {
+    public static Records.UserData getUser(String username) {
         return server.database.Database.getInstance().getUser(username);
     }
 

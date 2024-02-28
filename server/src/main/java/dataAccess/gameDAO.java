@@ -1,6 +1,7 @@
 package dataAccess;
 
 import model.Records;
+import server.clearApplication.Response;
 import server.database.Database;
 import chess.*;
 
@@ -40,5 +41,10 @@ public class gameDAO {
     public static HashSet<Records.GameData> getList(String auth) {
         HashSet<Records.GameData> list = new HashSet<>(server.database.Database.getInstance().getGames());
         return list;
+    }
+
+    public static Response clearApplication() {
+        server.database.Database.getInstance().clearApplication();
+        return new server.clearApplication.Response();
     }
 }

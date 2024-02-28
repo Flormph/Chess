@@ -32,23 +32,21 @@ public class Database {
         }
     }
 
-    public boolean clearApplication() {
+    public void clearApplication() {
         deleteAllGames();
         deleteAllAuthTokens();
         deleteAllUsers();
-        return games.isEmpty() && users.isEmpty() && tokens.isEmpty();
     }
 
-    public boolean addGame(String gameName, Records.GameData game) {
+    public void addGame(String gameName, Records.GameData game) {
         for(Records.GameData g: games) {
             if(Objects.equals(g.gameName(), gameName)) {
                 //todo add logic for add game
-                return false;
+                return;
             }
         }
 
         games.add(game);
-        return true;
     }
 
     public boolean deleteGame(String gameName) {

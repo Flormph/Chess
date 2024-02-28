@@ -4,7 +4,7 @@ import model.Records;
 
 public class userDAO {
 
-    static void createUser(Records.UserData user) {
+    public static void createUser(Records.UserData user) {
         server.database.Database.getInstance().addUser(user);
     }
 

@@ -13,6 +13,8 @@ public class Main {
             server.clearApplication.Handler handler = new server.clearApplication.Handler();
             return handler.Handler(request, response);
         });
+/*
+
 
         Spark.post("/user", (request, response) -> {
             RegisterHandler handler = new RegisterHandler();
@@ -43,6 +45,6 @@ public class Main {
             JoinGameHandler handler = new JoinGameHandler();
             return handler.Handler(request, response);
         });
-
+*/
     }
 }

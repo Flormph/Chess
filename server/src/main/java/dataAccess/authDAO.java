@@ -2,8 +2,11 @@ package dataAccess;
 
 import model.Records;
 
+import java.util.UUID;
+
 public class authDAO {
-    static String createAuth(Records.AuthData auth) {
+    public static String createAuth(String username) {
+        Records.AuthData auth = new Records.AuthData(UUID.randomUUID().toString(), username);
         server.database.Database.getInstance().addAuthToken(auth);
         return auth.authToken();
     }

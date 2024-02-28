@@ -11,5 +11,6 @@ public class Response extends server.extenders.Response{
     public Response(String errorMessage) {
         super(errorMessage);
     }
+    public Response(int dummy, String token) { super(dummy, token); }
 
 }

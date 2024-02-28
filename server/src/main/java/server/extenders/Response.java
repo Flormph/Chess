@@ -16,6 +16,13 @@ public class Response {
         successful = false;
         message = errorMessage;
     }
+
+    protected Response(int dummy, String returnObject) {
+        successful = true;
+        this.returnObject = returnObject;
+        this.message = null;
+    }
     boolean successful;
     String message;
+    String returnObject;
 }

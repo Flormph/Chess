@@ -22,8 +22,7 @@ public class Service extends server.extenders.Service{
         }
         else {
             Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-            userDAO.createUser(newUser);
-            return new Response(0, authDAO.createAuth(request.username));
+            return new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
         }
     }
 }

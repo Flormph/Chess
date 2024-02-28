@@ -17,12 +17,20 @@ public class Response {
         message = errorMessage;
     }
 
-    protected Response(int dummy, String returnObject) {
+    protected Response(int dummy, String returnString) {
         successful = true;
-        this.returnObject = returnObject;
+        returnString1 = returnString;
+        this.message = null;
+    }
+
+    protected Response(String return1, String return2) {
+        successful = true;
+        returnString1 = return1;
+        returnString2 = return2;
         this.message = null;
     }
     boolean successful;
     String message;
-    String returnObject;
+    String returnString1;
+    String returnString2;
 }

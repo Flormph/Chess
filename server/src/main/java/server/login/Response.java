@@ -1,4 +1,4 @@
-package server.register;
+package server.login;
 
  /* ClearApplicationResponse - stores possible responses for ClearApplication
          */

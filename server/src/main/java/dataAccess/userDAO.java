@@ -4,8 +4,8 @@ import model.Records;
 
 public class userDAO {
 
-    public static void createUser(Records.UserData user) {
-        server.database.Database.getInstance().addUser(user);
+    public static String createUser(Records.UserData user) {
+        return server.database.Database.getInstance().addUser(user);
     }
 
     static void removeUser(String username) {

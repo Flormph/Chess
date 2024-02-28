@@ -12,7 +12,7 @@ public class Handler extends server.extenders.Handler{
     public Handler() {
     }
 
-    public String Handler(Request Srequest, Response Sresponse) {
+    public String Handle(Request Srequest, Response Sresponse) {
         server.clearApplication.Request request = serializer.fromJson(Srequest.body(), server.clearApplication.Request.class);
         try {
             server.clearApplication.Service service = new server.clearApplication.Service();

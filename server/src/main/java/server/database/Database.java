@@ -73,14 +73,14 @@ public class Database {
         return true;
     }
 
-    public boolean addUser(Records.UserData user) {
+    public String addUser(Records.UserData user) {
         for(Records.UserData u: users) {
             if (Objects.equals(u.username(), user.username())) {
-                return false;
+                return null;
             }
         }
         users.add(user);
-        return true;
+        return user.username();
     }
 
     public boolean deleteUser(String userName) {

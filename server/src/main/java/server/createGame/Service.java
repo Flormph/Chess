@@ -18,7 +18,7 @@ public class Service extends server.extenders.Service{
      * @param request provided username, password, and email to create a user from
      * @return returns success response or a fail response
      */
-    public Response createGame(Request request) throws DataAccessException {
+    public static Response createGame(Request request) throws DataAccessException {
         if(request.gameName == null || request.gameName.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }

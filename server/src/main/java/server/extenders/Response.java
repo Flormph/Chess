@@ -59,4 +59,8 @@ public class Response {
     public String getMessage() {
         return message;
     }
+
+    public int getID() {
+        return Integer.parseInt(gameID);
+    }
 }

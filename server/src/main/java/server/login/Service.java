@@ -16,7 +16,8 @@ public class Service extends server.extenders.Service{
      * @param request provided username, password, and email to create a user from
      * @return returns success response or a fail response
      */
-    public Response login(Request request) throws DataAccessException {
+    public static Response login(Request request) throws DataAccessException {
+        database = server.database.Database.getInstance();
         if(request.username == null || request.username.isEmpty() || request.password == null || request.password.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }

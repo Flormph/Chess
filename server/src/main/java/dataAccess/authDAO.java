@@ -16,11 +16,20 @@ public class authDAO {
         return auth.authToken();
     }
 
-    static void deleteAuth(Records.AuthData auth) {
-        server.database.Database.getInstance().deleteAuthToken(auth);
+    public static void deleteAuth(String auth) {
+        server.database.Database.getInstance().deleteToken(auth);
     }
 
-    static String getAuth(String auth) {
+    public static String getAuth(String auth) {
         return server.database.Database.getInstance().getToken(auth);
+    }
+
+    /**
+     *
+     * @param auth an authToken
+     * @return whether or not the provided token is present in the database
+     */
+    public static boolean hasAuth(String auth) {
+        return server.database.Database.getInstance().hasToken(auth);
     }
 }

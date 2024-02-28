@@ -117,13 +117,20 @@ public class Database {
         return null;
     }
 
-    public boolean deleteAuthToken(Records.AuthData token) {
-        if(tokens.contains(token)) {
-            tokens.remove(token);
-            return true;
+    public boolean hasToken(String auth) {
+        for (Records.AuthData a : tokens) {
+            if(Objects.equals(a.authToken(), auth)) {
+                return true;
+            }
         }
-        else {
-            return false;
+        return false;
+    }
+
+    public void deleteToken(String auth) {
+        for (Records.AuthData a : tokens) {
+            if(Objects.equals(a.authToken(), auth)) {
+                tokens.remove(a);
+            }
         }
     }
 

@@ -28,6 +28,7 @@ public class Server {
             server.logout.Handler handler = new server.logout.Handler();
             return handler.Handle(request, response);
         });
+        /*
 
         Spark.get("/game", (request, response) -> {
             ListGameHandler handler = new ListGameHandler();
@@ -43,6 +44,8 @@ public class Server {
             JoinGameHandler handler = new JoinGameHandler();
             return handler.Handler(request, response);
         });
+
+         */
 
         // Register your endpoints and handle exceptions here.
 

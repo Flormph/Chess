@@ -1,8 +1,6 @@
 package server.extenders;
 
 import model.Records;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Response {
@@ -23,9 +21,11 @@ public class Response {
     }
 
     protected Response(int dummy, String returnString) {
-        successful = true;
-        authToken = returnString;
-        this.message = null;
+        if(dummy != 0) {
+            successful = true;
+            authToken = returnString;
+            this.message = null;
+        }
     }
 
     protected Response(String return1, String return2) {
@@ -60,7 +60,4 @@ public class Response {
         return message;
     }
 
-    public int getID() {
-        return Integer.parseInt(gameID);
-    }
 }

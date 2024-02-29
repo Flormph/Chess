@@ -10,7 +10,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         Spark.delete("/db", (request, response) -> {
-            server.clearApplication.Handler handler = new server.clearApplication.Handler();
+            server.clearapplication.Handler handler = new server.clearapplication.Handler();
             return handler.Handle(request, response);
         });
 
@@ -30,7 +30,7 @@ public class Server {
         });
 
         Spark.post("/game", (request, response) -> {
-            server.createGame.Handler handler = new server.createGame.Handler();
+            server.creategame.Handler handler = new server.creategame.Handler();
             return handler.Handle(request, response);
         });
 

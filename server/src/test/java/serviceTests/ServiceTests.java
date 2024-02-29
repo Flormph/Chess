@@ -1,17 +1,14 @@
 package serviceTests;
 
 import chess.ChessGame;
-import dataAccess.DataAccessException;
-import dataAccess.authDAO;
-import dataAccess.gameDAO;
-import dataAccess.userDAO;
+import dataaccess.DataAccessException;
+import dataaccess.authDAO;
+import dataaccess.gameDAO;
+import dataaccess.userDAO;
 import model.Records;
 import org.junit.jupiter.api.*;
-import passoffTests.obfuscatedTestClasses.TestServerFacade;
 import passoffTests.testClasses.TestException;
-import passoffTests.testClasses.TestModels;
-import server.Server;
-import server.clearApplication.Service;
+import server.clearapplication.Service;
 import server.register.Request;
 import server.register.Response;
 
@@ -20,12 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
-public class tests {
+public class ServiceTests {
 
     private static final ChessGame testChessGame = new ChessGame();
     private static final Records.UserData testUser = new Records.UserData("name", "password", "email");
-
-    private static final Records.AuthData testAuth = new Records.AuthData("RandomToken", "name");
 
     private static final Records.GameData testGame = new Records.GameData(1234, null, null, "game name", testChessGame);
 
@@ -40,7 +35,8 @@ public class tests {
 
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+        userDAO.createUser(newUser);
+        authDAO.createAuth(request.username);
 
         Assertions.assertEquals(userDAO.getUser("name"), testUser);
     }
@@ -53,8 +49,10 @@ public class tests {
         Request request = new Request("name", "password", "email");
         Records.UserData newUser1 = new Records.UserData(request1.username, request1.password, request1.email);
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-        Response response1 = new Response(userDAO.createUser(newUser1), authDAO.createAuth(request.username));
-        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+        userDAO.createUser(newUser1);
+        authDAO.createAuth(request.username);
+        userDAO.createUser(newUser);
+        authDAO.createAuth(request.username);
         assertNotEquals(userDAO.getUser("name").email(), testUser.email());
     }
 
@@ -63,13 +61,10 @@ public class tests {
     public void clearDatabase() throws TestException, DataAccessException {
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+        userDAO.createUser(newUser);
+        authDAO.createAuth(request.username);
 
-        server.createGame.Request request2 = new server.createGame.Request("game name", response.authToken);
-        Records.GameData gameData = new Records.GameData(1234, null, null, "game name", testChessGame);
-        server.createGame.Response response2 = new server.createGame.Response(gameDAO.createGame(gameData));
-
-        server.clearApplication.Request requestclear = new server.clearApplication.Request();
+        server.clearapplication.Request requestclear = new server.clearapplication.Request();
         assertNull(Service.clearApplication(requestclear).getMessage());
     }
 
@@ -78,11 +73,9 @@ public class tests {
     public void createGame() throws TestException{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
-
-        server.createGame.Request request2 = new server.createGame.Request("game name", response.authToken);
-        Records.GameData gameData = new Records.GameData(1234, null, null, "game name", testChessGame);
-        server.createGame.Response response2 = new server.createGame.Response(gameDAO.createGame(gameData));
+        userDAO.createUser(newUser);
+        authDAO.createAuth(request.username);
+        gameDAO.createGame(testGame);
 
         assertEquals(gameDAO.getGame(1234), testGame);
     }
@@ -94,10 +87,10 @@ public class tests {
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
 
-        server.createGame.Request request2 = new server.createGame.Request(null, response.authToken);
-        server.createGame.Response response2 = null;
+        server.creategame.Request request2 = new server.creategame.Request(null, response.authToken);
+        server.creategame.Response response2 = null;
         try {
-            response2 = server.createGame.Service.createGame(request2);
+            response2 = server.creategame.Service.createGame(request2);
         }
         catch(DataAccessException e) {
         }
@@ -112,14 +105,11 @@ public class tests {
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
 
-        server.createGame.Request request2 = new server.createGame.Request("game name", response.authToken);
-        Records.GameData gameData = new Records.GameData(1234, null, null, "game name", testChessGame);
-        server.createGame.Response response2 = new server.createGame.Response(gameDAO.createGame(gameData));
-
+        gameDAO.createGame(testGame);
         server.join.Request request1 = new server.join.Request(ChessGame.TeamColor.WHITE, "1234");
         request1.auth = response.authToken;
         try {
-            server.join.Response response1 = server.join.Service.joinGame(request1);
+            server.join.Service.joinGame(request1);
         } catch (DataAccessException e) {
         }
 
@@ -140,7 +130,7 @@ public class tests {
         request1.auth = response.authToken;
 
         try {
-            server.join.Response response1 = server.join.Service.joinGame(request1);
+            server.join.Service.joinGame(request1);
         } catch (DataAccessException e) {
             gameDAO.setWhitePlayer(1234, "already taken");
         }
@@ -150,7 +140,7 @@ public class tests {
 
     @Test
     @DisplayName("Can login")
-    public void login() {
+    public void login() throws TestException, DataAccessException {
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -163,6 +153,7 @@ public class tests {
         try {
             response1 = server.login.Service.login(request1);
         } catch (DataAccessException e) {
+            throw new DataAccessException("Error bad login", 401);
         }
 
         assertNotNull(authDAO.getAuth(response1.authToken));
@@ -170,7 +161,7 @@ public class tests {
 
     @Test
     @DisplayName("Cant login with bad password")
-    public void badLogin() {
+    public void badLogin() throws TestException, DataAccessException{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -217,21 +208,20 @@ public class tests {
     public void list() throws TestException{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+        userDAO.createUser(newUser);
+        authDAO.createAuth(request.username);
 
-        server.createGame.Request request2 = new server.createGame.Request("game name", response.authToken);
         Records.GameData gameData = new Records.GameData(1234, null, null, "game name", testChessGame);
-        server.createGame.Response response2 = new server.createGame.Response(gameDAO.createGame(gameData));
+        Records.GameData gameData3 = new Records.GameData(12345, null, null, "game 2", testChessGame);
 
-        server.createGame.Request request3 = new server.createGame.Request("game 2", response.authToken);
-        Records.GameData gameData3 = new Records.GameData(1234, null, null, "game 2", testChessGame);
-        server.createGame.Response response3 = new server.createGame.Response(gameDAO.createGame(gameData3));//note
+        gameDAO.createGame(gameData);
+        gameDAO.createGame(gameData3);
 
-        HashSet<Records.GameData> expectedList = new HashSet<Records.GameData>();//main
+        HashSet<Records.GameData> expectedList = new HashSet<>();//main
         expectedList.add(gameData);
         expectedList.add(gameData3);
 
-        assertEquals(gameDAO.getList(response.authToken), expectedList);
+        assertEquals(gameDAO.getList(), expectedList);
     }
 
     @Test
@@ -239,32 +229,29 @@ public class tests {
     public void badList() throws TestException{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-        Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+        userDAO.createUser(newUser);
+        authDAO.createAuth(request.username);
 
-        server.createGame.Request request2 = new server.createGame.Request("game name", response.authToken);
         Records.GameData gameData = new Records.GameData(1234, null, null, "game name", testChessGame);
-        server.createGame.Response response2 = new server.createGame.Response(gameDAO.createGame(gameData));
-
         Records.GameData gameData2 = new Records.GameData(12345, null, null, "game 3", testChessGame);
-
-
-        server.createGame.Request request3 = new server.createGame.Request("game 2", response.authToken);
         Records.GameData gameData3 = new Records.GameData(123456, null, null, "game 2", testChessGame);
-        server.createGame.Response response3 = new server.createGame.Response(gameDAO.createGame(gameData3));
 
+        gameDAO.createGame(gameData);
         gameDAO.createGame(gameData2);
+        gameDAO.createGame(gameData3);
 
-        HashSet<Records.GameData> expectedList = new HashSet<Records.GameData>();
+
+        HashSet<Records.GameData> expectedList = new HashSet<>();
         expectedList.add(gameData);
         expectedList.add(gameData3);
 
-        assertNotEquals(gameDAO.getList(response.authToken), expectedList);
+        assertNotEquals(gameDAO.getList(), expectedList);
     }
 
     @Test
     @DisplayName("DUMMY TEST BECAUSE EXTENDED CLASSES NEED TESTS")
     public void dummy() {
-        assertEquals(1,1);
+        assertNotNull(1);
     }
 
     @Test

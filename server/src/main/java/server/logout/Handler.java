@@ -1,6 +1,6 @@
 package server.logout;
 
-import dataAccess.DataAccessException;
+import dataaccess.DataAccessException;
 import spark.Request;
 import spark.Response;
 

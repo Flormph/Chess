@@ -1,9 +1,7 @@
 package server.logout;
 
-import dataAccess.DataAccessException;
-import dataAccess.authDAO;
-
-import java.util.Objects;
+import dataaccess.DataAccessException;
+import dataaccess.authDAO;
 
 /**
  * ClearApplicationService - Clears the database. Removes all users, games, and authTokens.

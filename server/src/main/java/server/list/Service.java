@@ -1,8 +1,8 @@
 package server.list;
 
-import dataAccess.DataAccessException;
-import dataAccess.authDAO;
-import dataAccess.gameDAO;
+import dataaccess.DataAccessException;
+import dataaccess.authDAO;
+import dataaccess.gameDAO;
 
 /**
  * ClearApplicationService - Clears the database. Removes all users, games, and authTokens.
@@ -21,7 +21,7 @@ public class Service extends server.extenders.Service{
             throw new DataAccessException("Error: unauthorized", 401);
         }
         else {
-            return new Response(gameDAO.getList(request.token));
+            return new Response(gameDAO.getList());
         }
     }
 }

@@ -227,7 +227,7 @@ public class tests {
         Records.GameData gameData3 = new Records.GameData(1234, null, null, "game 2", testChessGame);
         server.createGame.Response response3 = new server.createGame.Response(gameDAO.createGame(gameData3));//note
 
-        HashSet<Records.GameData> expectedList = new HashSet<Records.GameData>();
+        HashSet<Records.GameData> expectedList = new HashSet<Records.GameData>();//main
         expectedList.add(gameData);
         expectedList.add(gameData3);
 

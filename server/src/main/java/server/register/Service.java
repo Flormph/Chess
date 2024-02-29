@@ -17,7 +17,7 @@ public class Service extends server.extenders.Service{
         if(request.username == null || request.username.isEmpty() || request.email == null || request.email.isEmpty() || request.password == null || request.password.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }
-        else if(!database.users.isEmpty() && database.usersContains(request.username)) {
+        else if(!Database.users.isEmpty() && database.usersContains(request.username)) {
             throw new DataAccessException("Error: already taken", 403);
         }
         else {

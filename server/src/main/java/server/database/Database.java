@@ -135,6 +135,7 @@ public class Database {
         for (Records.AuthData a : tokens) {
             if(Objects.equals(a.authToken(), auth)) {
                 tokens.remove(a);
+                break;
             }
         }
     }
@@ -184,7 +185,7 @@ public class Database {
     }
 
     public void addObserver(int ID, String userName) {
-        return; //TODO implement observers in later stages
+        //TODO implement observers in later stages
     }
 
     public int getGameID() {

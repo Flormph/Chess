@@ -12,7 +12,7 @@ public class Handler extends server.extenders.Handler{
         server.join.Response response = null;
         try {
             Service service = new Service();
-            response = service.joinGame(request);
+            response = Service.joinGame(request);
         } catch (DataAccessException e) {
             //TODO A FLIP OR NOT TODO A FLIP (MAKE RESPONSE OBJECT FOR FAILURE
             response = new server.join.Response(e.getMessage());

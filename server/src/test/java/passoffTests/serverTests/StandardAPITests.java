@@ -179,7 +179,6 @@ public class StandardAPITests {
                 createResult.message != null && createResult.message.toLowerCase(Locale.ROOT).contains("error"),
                 "Result returned an error message");
 
-
         TestModels.TestResult logoutResult = serverFacade.logout(existingAuth);
         Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(),
                 "Server response code was not 200 OK");

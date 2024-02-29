@@ -11,7 +11,7 @@ public class Handler extends server.extenders.Handler{
         server.login.Response response = null;
         try {
             Service service = new Service();
-            response = service.login(request);
+            response = Service.login(request);
         } catch (DataAccessException e) {
             //TODO A FLIP OR NOT TODO A FLIP (MAKE RESPONSE OBJECT FOR FAILURE
             response = new server.login.Response(e.getMessage());

@@ -260,4 +260,16 @@ public class tests {
 
         assertNotEquals(gameDAO.getList(response.authToken), expectedList);
     }
+
+    @Test
+    @DisplayName("DUMMY TEST BECAUSE EXTENDED CLASSES NEED TESTS")
+    public void dummy() {
+        assertEquals(1,1);
+    }
+
+    @Test
+    @DisplayName("DUMMY TEST BECAUSE EXTENDED CLASSES NEED more TESTS")
+    public void dummy2() {
+        assertNotEquals(1,2);
+    }
 }

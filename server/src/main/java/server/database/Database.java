@@ -22,13 +22,13 @@ public class Database {
 
     public Database() {
         if(games == null) {
-            games = new ArrayList<Records.GameData>();
+            games = new ArrayList<>();
         }
         if(users == null) {
-            users = new ArrayList<Records.UserData>();
+            users = new ArrayList<>();
         }
         if(tokens == null) {
-            tokens = new HashSet<Records.AuthData>();
+            tokens = new HashSet<>();
         }
     }
 
@@ -41,36 +41,14 @@ public class Database {
     public void addGame(String gameName, Records.GameData game) {
         for(Records.GameData g: games) {
             if(Objects.equals(g.gameName(), gameName)) {
-                //todo add logic for add game
                 return;
             }
         }
-
         games.add(game);
     }
 
-    public boolean deleteGame(String gameName) {
-        for(Records.GameData g: games) {
-            if(Objects.equals(g.gameName(), gameName)) {
-                games.remove(g);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean deleteGame(int gameID) {
-        for(Records.GameData g: games) {
-            if(Objects.equals(g.gameID(), gameID)) {
-                games.remove(g);
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean deleteAllGames() {
+    public void deleteAllGames() {
         games.clear();
-        return true;
     }
 
     public String addUser(Records.UserData user) {
@@ -83,29 +61,12 @@ public class Database {
         return user.username();
     }
 
-    public boolean deleteUser(String userName) {
-        for(Records.UserData u: users) {
-            if (Objects.equals(u.username(), userName)) {
-                users.remove(u);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean deleteAllUsers() {
+    public void deleteAllUsers() {
         users.clear();
-        return true;
     }
 
-    public boolean addAuthToken(Records.AuthData token) {
-        if(tokens.contains(token)) {
-            return false;
-        }
-        else {
-            tokens.add(token);
-            return true;
-        }
+    public void addAuthToken(Records.AuthData token) {
+        tokens.add(token);
     }
 
     /**
@@ -140,18 +101,8 @@ public class Database {
         }
     }
 
-    public boolean deleteAllAuthTokens() {
+    public void deleteAllAuthTokens() {
         tokens.clear();
-        return true;
-    }
-
-    public boolean containsGame(String gameName) {
-        for(Records.GameData g: games) {
-            if(Objects.equals(g.gameName(), gameName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean containsGame(int gameID) {
@@ -184,19 +135,6 @@ public class Database {
         }
     }
 
-    public void addObserver(int ID, String userName) {
-        //TODO implement observers in later stages
-    }
-
-    public int getGameID() {
-        UUID id = UUID.randomUUID();
-        String str = "" + id;
-        int myID = str.hashCode();
-        String filterStr = "" + myID;
-        str = filterStr.replaceAll("-", "");
-        return Integer.parseInt(str);
-    }
-
     public Records.GameData gameFromID(int id) {
         for(Records.GameData g: games) {
             if(g.gameID() == id) {
@@ -204,19 +142,6 @@ public class Database {
             }
         }
         return null;
-    }
-
-    public String getNameFromID(int id) {
-        for(Records.GameData g: games) {
-            if(g.gameID() == id) {
-                return g.gameName();
-            }
-        }
-        return null;
-    }
-
-    public boolean gamesIsEmpty() {
-        return games.isEmpty();
     }
 
     public ArrayList<Records.GameData> getGames() {
@@ -239,32 +164,6 @@ public class Database {
             }
         }
         return null;
-    }
-
-    public String generateToken(String username) {
-        Records.AuthData token = new Records.AuthData(UUID.randomUUID().toString(), username);
-        tokens.add(token);
-        return token.authToken();
-    }
-
-    public boolean tokensContains(Records.AuthData token) {
-        for(Records.AuthData t: tokens) {
-            if(Objects.equals(t.authToken(), token.authToken())) return true;
-        }
-        return false;
-    }
-
-    public void nullifyToken(String username) {
-        if (this.usersContains(username)) {
-            tokens.remove(username);
-        }
-    }
-
-    public boolean isEmpty(){
-        return games.isEmpty() && users.isEmpty() && tokens.isEmpty();
-    }
-    public String printApplication() {
-        return this.toString();
     }
 
     @Override
@@ -300,5 +199,4 @@ public class Database {
 
         return sb.toString();
     }
-//todo add a to string method for debugging purposes
 }

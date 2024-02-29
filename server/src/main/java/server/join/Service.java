@@ -1,9 +1,9 @@
 package server.join;
 
 import chess.ChessGame;
-import dataAccess.DataAccessException;
-import dataAccess.authDAO;
-import dataAccess.gameDAO;
+import dataaccess.DataAccessException;
+import dataaccess.authDAO;
+import dataaccess.gameDAO;
 
 import java.util.Objects;
 
@@ -54,7 +54,6 @@ public class Service extends server.extenders.Service{
                 return new Response();
             }
             else {
-                gameDAO.addObserver(ID, username);
                 return new Response();
             }
         }

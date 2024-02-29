@@ -1,9 +1,7 @@
 package server.login;
 
-import dataAccess.DataAccessException;
-import dataAccess.authDAO;
-import dataAccess.userDAO;
-import model.Records;
+import dataaccess.DataAccessException;
+import dataaccess.authDAO;
 
 import java.util.Objects;
 

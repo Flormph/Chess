@@ -1,4 +1,4 @@
-package server.clearApplication;
+package server.creategame;
 
  /* ClearApplicationResponse - stores possible responses for ClearApplication
          */
@@ -11,5 +11,6 @@ public class Response extends server.extenders.Response{
     public Response(String errorMessage) {
         super(errorMessage);
     }
+    public Response(int gameID) { super(gameID); }
 
 }

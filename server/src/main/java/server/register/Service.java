@@ -1,6 +1,6 @@
 package server.register;
 
-import dataAccess.*;
+import dataaccess.*;
 import model.Records;
 import server.database.Database;
 

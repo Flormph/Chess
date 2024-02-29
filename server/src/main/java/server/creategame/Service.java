@@ -1,12 +1,11 @@
-package server.createGame;
+package server.creategame;
 
 import chess.ChessGame;
-import dataAccess.DataAccessException;
-import dataAccess.authDAO;
-import dataAccess.gameDAO;
+import dataaccess.DataAccessException;
+import dataaccess.authDAO;
+import dataaccess.gameDAO;
 import model.Records;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**

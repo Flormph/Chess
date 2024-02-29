@@ -173,7 +173,7 @@ public class ServiceTests {
         server.login.Response response1 = null;
         try {
             response1 = server.login.Service.login(request1);
-        } catch (DataAccessException e) {
+        } catch (DataAccessException e) { //these blocks aren't used but are needed
         }
 
         assertNull(response1);

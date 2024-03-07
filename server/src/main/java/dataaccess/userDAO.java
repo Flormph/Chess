@@ -2,13 +2,50 @@ package dataaccess;
 
 import model.Records;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class userDAO {
 
-    public static String createUser(Records.UserData user) {
-        return server.database.Database.getInstance().addUser(user);
+    public static String createUser(Records.UserData user) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
+                preparedStatement.setString(1, user.username());
+                preparedStatement.setString(2, user.password());
+                preparedStatement.setString(3, user.email());
+                int rowsInserted = preparedStatement.executeUpdate();
+                if(rowsInserted == 0) {
+                    throw new DataAccessException("Failed to insert data into table", 500);
+                }
+            }
+        }
+        catch (SQLException e) {
+            // Print stack trace of the caught SQL exception
+            e.printStackTrace();
+            throw new DataAccessException("SQL error: " + e.getMessage(), 500);
+        } catch (Exception e) {
+            // Print stack trace of any other caught exception
+            e.printStackTrace();
+            throw new DataAccessException("Failed to connect to server", 500);
+        }
+        return user.username();
     }
 
-    public static Records.UserData getUser(String username) {
-        return server.database.Database.getInstance().getUser(username);
+    public static Records.UserData getUser(String username) throws DataAccessException {
+        Records.UserData User;
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("SELECT name, password, email FROM users WHERE name = ?")) {
+                preparedStatement.setString(1, username);
+                ResultSet result = preparedStatement.executeQuery();
+                User = new Records.UserData(result.getString("name"), result.getString("password"), result.getString("email"));
+            }
+            catch(Exception e) {
+                throw new DataAccessException("SQL error", 500);
+            }
+        }
+        catch(Exception e) {
+            throw new DataAccessException("Failed to connect to server", 500);
+        }
+        return null;
     }
 }

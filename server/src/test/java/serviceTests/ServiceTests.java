@@ -31,7 +31,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("user can be registered")
-    public void successRegisterUser() throws TestException{
+    public void successRegisterUser() throws Exception{
 
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
@@ -43,7 +43,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("usernames must be unique")
-    public void failRegisterUser() throws TestException{
+    public void failRegisterUser() throws Exception{
 
         Request request1 = new Request("name", "password", "firstEmail");
         Request request = new Request("name", "password", "email");
@@ -70,7 +70,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Games can be created")
-    public void createGame() throws TestException{
+    public void createGame() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         userDAO.createUser(newUser);
@@ -100,7 +100,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Users can join a game")
-    public void joinGame() {
+    public void joinGame() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -118,7 +118,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Users cant join as a filled slot")
-    public void badJoinGame() {
+    public void badJoinGame() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -140,7 +140,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Can login")
-    public void login() throws TestException, DataAccessException {
+    public void login() throws Exception {
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -161,7 +161,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Cant login with bad password")
-    public void badLogin() throws TestException, DataAccessException{
+    public void badLogin() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -181,7 +181,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Can logout")
-    public void logout() {
+    public void logout() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -192,7 +192,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Cant login with bad password")
-    public void badLogout() {
+    public void badLogout() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         Response response = new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
@@ -205,7 +205,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Gameslist is generated")
-    public void list() throws TestException{
+    public void list() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         userDAO.createUser(newUser);
@@ -226,7 +226,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Gameslist isnt generated")
-    public void badList() throws TestException{
+    public void badList() throws Exception{
         Request request = new Request("name", "password", "email");
         Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
         userDAO.createUser(newUser);

@@ -21,8 +21,13 @@ public class Service extends server.extenders.Service{
             throw new DataAccessException("Error: already taken", 403);
         }
         else {
-            Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
-            return new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+            try {
+                Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
+                return new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
+            }
+            catch(Exception e) {
+                throw new DataAccessException("SQL error", 500);
+            }
         }
     }
 }

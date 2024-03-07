@@ -41,6 +41,25 @@ public class DatabaseManager {
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
+            createTables();
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    static void createTables() throws DataAccessException {
+        try {
+            var conn = DriverManager.getConnection(connectionUrl, user, password);
+            conn.setCatalog("chess");
+            try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users (username varchar(128), password varchar(128), email varchar(128));")) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS tokens (auth varchar(128), username varchar(128));")) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS games (gameID int, whiteUsername varchar(128), blackUsername varchar(128), gameName varchar(128), game varchar(256));")) {
+                preparedStatement.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }

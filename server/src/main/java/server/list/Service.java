@@ -17,9 +17,9 @@ public class Service extends server.extenders.Service{
         if(request.token == null || request.token.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }
-        else if(!authDAO.hasAuth(request.token)) {
+        /*else if(!authDAO.hasAuth(request.token)) {
             throw new DataAccessException("Error: unauthorized", 401);
-        }
+        }*/ //TODO
         else {
             return new Response(gameDAO.getList());
         }

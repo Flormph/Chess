@@ -28,8 +28,17 @@ public class gameDAO {
         return new HashSet<>(server.database.Database.getInstance().getGames());
     }
 
-    public static Response clearApplication() {
-        server.database.Database.getInstance().clearApplication();
-        return new server.clearapplication.Response();
+    public static void clearApplication() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("DROP Table games")) {
+                preparedStatement.executeUpdate();
+            }
+            catch(Exception e) {
+                throw new DataAccessException("SQL error", 500);
+            }
+        }
+        catch(Exception e) {
+            throw new DataAccessException("Failed to connect to server", 500);
+        }
     }
 }

@@ -21,9 +21,9 @@ public class Service extends server.extenders.Service{
         if(request.gameName == null || request.gameName.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }
-        else if(!authDAO.hasAuth(request.auth)) {
+        /*else if(!authDAO.hasAuth(request.auth)) {
             throw new DataAccessException("Error: unauthorized", 401);
-        }
+        }*/ //TODO
         else {
             int gameID = UUID.randomUUID().hashCode();
             if(gameID < 0) { gameID *= -1; }

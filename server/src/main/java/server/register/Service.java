@@ -25,8 +25,8 @@ public class Service extends server.extenders.Service{
                 Records.UserData newUser = new Records.UserData(request.username, request.password, request.email);
                 return new Response(userDAO.createUser(newUser), authDAO.createAuth(request.username));
             }
-            catch(Exception e) {
-                throw new DataAccessException("SQL error", 500);
+            catch(DataAccessException e) {
+                throw new DataAccessException(e.getMessage(), e.getCode());
             }
         }
     }

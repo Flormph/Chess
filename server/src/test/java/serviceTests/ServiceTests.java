@@ -25,7 +25,7 @@ public class ServiceTests {
     private static final Records.GameData testGame = new Records.GameData(1234, null, null, "game name", testChessGame);
 
     @BeforeEach
-    public void cleanup() {
+    public void cleanup() throws DataAccessException{
         gameDAO.clearApplication();
     }
 

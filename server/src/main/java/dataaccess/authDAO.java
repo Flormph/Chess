@@ -23,7 +23,7 @@ public class authDAO {
 
         Records.AuthData auth = new Records.AuthData(UUID.randomUUID().toString(), username);
         try (var conn = DatabaseManager.getConnection()) {
-            if(!hasAuth(conn, username)) {
+            if(!hasUser(username)) {
                 try (var preparedStatement = conn.prepareStatement("INSERT INTO tokens (auth, username) VALUES (?, ?)")) {
                     preparedStatement.setString(1, auth.authToken());
                     preparedStatement.setString(2, auth.username());
@@ -49,8 +49,20 @@ public class authDAO {
         return auth.authToken();
     }
 
-    public static void deleteAuth(String auth) {
-        server.database.Database.getInstance().deleteToken(auth);
+    public static void deleteAuth(String auth) throws DataAccessException{
+        Records.AuthData Auth;
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM tokens WHERE auth = ?;")) {
+                preparedStatement.setString(1, auth);
+                preparedStatement.executeUpdate();
+            }
+            catch(Exception e) {
+                throw new DataAccessException("SQL error", 500);
+            }
+        }
+        catch(Exception e) {
+            throw new DataAccessException("Failed to connect to server", 500);
+        }
     }
 
     public static String getAuth(String auth) {
@@ -59,15 +71,20 @@ public class authDAO {
 
     /**
      *
-     * @param conn a sql Connection
+     * @param username a username to look for in the tokens
      * @return whether or not the provided token is present in the database
      */
-    private static boolean hasAuth(Connection conn, String username) throws SQLException {
-        try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM tokens WHERE username = ?")) {
-            preparedStatement.setString(1, username);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return resultSet.next();
+    public static boolean hasUser(String username) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM tokens WHERE username = ?")) {
+                preparedStatement.setString(1, username);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return resultSet.next();
+                }
             }
+        }
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage(), 500);
         }
     }
 

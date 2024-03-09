@@ -1,4 +1,4 @@
-package dataaccess;
+package dataAccess;
 
 import model.Records;
 
@@ -41,22 +41,32 @@ public class userDAO {
     public static Records.UserData getUser(String username) throws DataAccessException {
         Records.UserData User;
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("SELECT name, password, email FROM users WHERE name = ?")) {
+            try (var preparedStatement = conn.prepareStatement("SELECT username, password, email FROM users WHERE username = ?")) {
                 preparedStatement.setString(1, username);
-                ResultSet result = preparedStatement.executeQuery();
-                User = new Records.UserData(result.getString("name"), result.getString("password"), result.getString("email"));
+                try (ResultSet result = preparedStatement.executeQuery()) {
+                    if (result.next()) {
+                        String usernameOut = result.getString("username");
+                        String password = result.getString("password");
+                        String email = result.getString("email");
+                        User = new Records.UserData(usernameOut, password, email);
+                    } else {
+                        throw new SQLException("Username not found");
+                    }
+                }
             }
             catch(Exception e) {
+                e.printStackTrace();
                 throw new DataAccessException("SQL error", 500);
             }
         }
         catch(Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Failed to connect to server", 500);
         }
-        return null;
+        return User;
     }
 
-    private static boolean hasUser(String username) throws DataAccessException {
+    public static boolean hasUser(String username) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM users WHERE username = ?")) {
                 preparedStatement.setString(1, username);

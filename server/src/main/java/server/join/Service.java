@@ -1,9 +1,9 @@
 package server.join;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
-import dataaccess.authDAO;
-import dataaccess.gameDAO;
+import dataAccess.DataAccessException;
+import dataAccess.authDAO;
+import dataAccess.gameDAO;
 
 import java.util.Objects;
 

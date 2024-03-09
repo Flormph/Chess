@@ -1,5 +1,4 @@
-import chess.*;
-import dataaccess.DatabaseManager;
+import dataAccess.DatabaseManager;
 
 public class Main {
     public static void main(String[] args) throws Exception {

@@ -1,7 +1,7 @@
 package server.login;
 
-import dataaccess.DataAccessException;
-import dataaccess.authDAO;
+import dataAccess.DataAccessException;
+import dataAccess.*;
 
 import java.util.Objects;
 
@@ -15,14 +15,13 @@ public class Service extends server.extenders.Service{
      * @return returns success response or a fail response
      */
     public static Response login(Request request) throws DataAccessException {
-        database = server.database.Database.getInstance();
         if(request.username == null || request.username.isEmpty() || request.password == null || request.password.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }
-        else if(!database.usersContains(request.username)) {
+        else if(!userDAO.hasUser(request.username)) {
             throw new DataAccessException("Error: username or password incorrect", 401);
         }
-        else if(!Objects.equals(database.getUser(request.username).password(), request.password)) {
+        else if(!Objects.equals(userDAO.getUser(request.username).password(), request.password)) {
             throw new DataAccessException("Error: username or password incorrect", 401);
         }
         else {

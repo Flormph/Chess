@@ -1,8 +1,7 @@
 package server.register;
 
-import dataaccess.*;
+import dataAccess.*;
 import model.Records;
-import server.database.Database;
 
 /**
  * ClearApplicationService - Clears the database. Removes all users, games, and authTokens.
@@ -17,7 +16,7 @@ public class Service extends server.extenders.Service{
         if(request.username == null || request.username.isEmpty() || request.email == null || request.email.isEmpty() || request.password == null || request.password.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }
-        else if(!Database.users.isEmpty() && database.usersContains(request.username)) {
+        else if(userDAO.hasUser(request.username)) {
             throw new DataAccessException("Error: already taken", 403);
         }
         else {

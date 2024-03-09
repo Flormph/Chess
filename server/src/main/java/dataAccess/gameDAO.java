@@ -1,9 +1,8 @@
-package dataaccess;
+package dataAccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.Records;
-import server.clearapplication.Response;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -75,6 +74,7 @@ public class gameDAO {
                         String blackUsername = resultSet.getString("blackUsername");
                         String gameName = resultSet.getString("gameName");
                         ChessGame game = serializer.fromJson(resultSet.getString("game"), ChessGame.class);
+                        System.out.print(resultSet.getString("game").length());
                         return new Records.GameData(gameID, whiteUsername, blackUsername, gameName, game);
                     }
                     else {

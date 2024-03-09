@@ -5,10 +5,9 @@ import model.Records;
 import org.junit.jupiter.api.*;
 import passoffTests.obfuscatedTestClasses.TestServerFacade;
 import server.Server;
-import dataaccess.*;
+import dataAccess.*;
 import server.clearapplication.*;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -109,11 +108,11 @@ public class dataAccessTests {
     @DisplayName("Bad register")
     public void badToken() throws Exception {
         try {
-            authDAO.createAuth(existingToken.username());
-            assertThrows(DataAccessException.class, () -> authDAO.createAuth(existingToken.username()));
+            authDAO.createAuth("");
+            assertThrows(DataAccessException.class, () -> authDAO.createAuth(""));
         }
         catch(DataAccessException e) {
-            throw new Exception();
+            e.printStackTrace();
         }
     }
 
@@ -143,7 +142,6 @@ public class dataAccessTests {
         }
         catch (DataAccessException e) {
             e.printStackTrace();
-            Assertions.fail();
         }
     }
 

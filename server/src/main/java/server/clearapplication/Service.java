@@ -1,8 +1,7 @@
 package server.clearapplication;
 
-import dataaccess.DataAccessException;
-import dataaccess.*;
-import server.database.Database;
+import dataAccess.DataAccessException;
+import dataAccess.*;
 
 /**
  * ClearApplicationService - Clears the database. Removes all users, games, and authTokens.

@@ -1,6 +1,6 @@
 package server.creategame;
 
-import dataaccess.DataAccessException;
+import dataAccess.DataAccessException;
 import spark.Request;
 import spark.Response;
 

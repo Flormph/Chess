@@ -1,12 +1,13 @@
-package server.database;
+/*package server.database;
 
 import model.Records;
 
 import java.util.*;
-
+*/
 /**
  * Database - a temporary class to function in place of a remote server for phase 3 of the chess project. It stores the games, users, and other information.
  */
+/*
 public class Database {
     public static ArrayList<Records.GameData> games;
     public static ArrayList<Records.UserData> users;
@@ -68,12 +69,13 @@ public class Database {
     public void addAuthToken(Records.AuthData token) {
         tokens.add(token);
     }
-
+*/
     /**
      *
      * @param auth token of the current user
      * @return username of the current user
      */
+    /*
     public String getToken(String auth) {
         for (Records.AuthData a : tokens) {
             if(Objects.equals(a.authToken(), auth)) {
@@ -200,3 +202,4 @@ public class Database {
         return sb.toString();
     }
 }
+*/

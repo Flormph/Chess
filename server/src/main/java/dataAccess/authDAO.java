@@ -1,8 +1,7 @@
-package dataaccess;
+package dataAccess;
 
 import model.Records;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,36 +15,41 @@ public class authDAO {
      * @return Returns the token associated with the newly logged-in user
      */
     public static String createAuth(String username) throws DataAccessException{
-        String token = null;
-        do { //this loop grabs a new token if the generated one is already in the server
-            token = UUID.randomUUID().toString();
-        }
-        while (server.database.Database.getInstance().hasToken(token));
-
         Records.AuthData auth = new Records.AuthData(UUID.randomUUID().toString(), username);
-        try (var conn = DatabaseManager.getConnection()) {
-            if(!hasUser(username)) {
-                try (var preparedStatement = conn.prepareStatement("INSERT INTO tokens (auth, username) VALUES (?, ?)")) {
-                    preparedStatement.setString(1, auth.authToken());
-                    preparedStatement.setString(2, auth.username());
-                    int rowsInserted = preparedStatement.executeUpdate();
-                    if (rowsInserted == 0) {
-                        throw new DataAccessException("Failed to insert data into table", 500);
+        if (!username.isEmpty()) {
+            try (var conn = DatabaseManager.getConnection()) {
+                if(!hasUser(username)) {
+                    try (var preparedStatement = conn.prepareStatement("INSERT INTO tokens (auth, username) VALUES (?, ?)")) {
+                        preparedStatement.setString(1, auth.authToken());
+                        preparedStatement.setString(2, auth.username());
+                        int rowsInserted = preparedStatement.executeUpdate();
+                        if (rowsInserted == 0) {
+                            throw new DataAccessException("ERROR: Failed to insert data into table", 500);
+                        }
                     }
                 }
-            }
-            else {
-                throw new DataAccessException("already logged in", 403);
+                else {
+                    try (var preparedStatement = conn.prepareStatement("UPDATE tokens SET auth = ? WHERE username = ?")) {
+                        preparedStatement.setString(1, auth.authToken());
+                        preparedStatement.setString(2, auth.username());
+                        int rowsInserted = preparedStatement.executeUpdate();
+                        if (rowsInserted == 0) {
+                            throw new DataAccessException("ERROR: Failed to update data into table", 500);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                // Print stack trace of the caught SQL exception
+                e.printStackTrace();
+                throw new DataAccessException("SQL error: " + e.getMessage(), 500);
+            } catch (Exception e) {
+                // Print stack trace of any other caught exception
+                e.printStackTrace();
+                throw new DataAccessException("Failed to connect to server", 500);
             }
         }
-        catch (SQLException e) {
-            // Print stack trace of the caught SQL exception
-            e.printStackTrace();
-            throw new DataAccessException("SQL error: " + e.getMessage(), 500);
-        } catch (Exception e) {
-            // Print stack trace of any other caught exception
-            e.printStackTrace();
-            throw new DataAccessException("Failed to connect to server", 500);
+        else {
+            throw new DataAccessException("Error: user doesn't exist", 401);
         }
         return auth.authToken();
     }
@@ -53,8 +57,8 @@ public class authDAO {
     public static void deleteAuth(String auth) throws DataAccessException{
         Records.AuthData Auth;
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM tokens WHERE auth = ?;")) {
-                preparedStatement.setString(1, auth);
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM tokens WHERE username = ?;")) {
+                preparedStatement.setString(1, getAuth(auth));
                 preparedStatement.executeUpdate();
             }
             catch(Exception e) {
@@ -75,13 +79,13 @@ public class authDAO {
                         return resultSet.getString("username");
                     }
                     else {
-                        throw new DataAccessException("AuthToken does not exist", 403);
+                        throw new DataAccessException("Error: AuthToken does not exist", 401);
                     }
                 }
             }
         }
         catch (Exception e) {
-            throw new DataAccessException(e.getMessage(), 500);
+            throw new DataAccessException(e.getMessage(), 401);
         }
     }
 

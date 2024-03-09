@@ -7,6 +7,8 @@ import server.Server;
 import dataaccess.*;
 import server.clearapplication.*;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SuppressWarnings("NewClassNamingConvention")
@@ -132,6 +134,7 @@ public class dataAccessTests {
     @DisplayName("Bad Delete token")
     public void badDeleteToken() throws Exception {
         try {
+            authDAO.createAuth(existingToken.username());
             Assertions.assertTrue(authDAO.hasUser(existingToken.username()));
             authDAO.deleteAuth("Incorrect Token");
             Assertions.assertTrue(authDAO.hasUser(existingToken.username()));
@@ -139,6 +142,34 @@ public class dataAccessTests {
         catch (DataAccessException e) {
             e.printStackTrace();
             Assertions.fail();
+        }
+    }
+
+    @Test
+    @DisplayName("Can get username from token")
+    public void GetAuth() throws DataAccessException {
+        try {
+            String expectedUsername = "testUsername";
+            String token = authDAO.createAuth(expectedUsername);
+            Assertions.assertEquals(authDAO.getAuth(token), expectedUsername);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Doesn't give username if bad token")
+    public void badGetAuth() throws DataAccessException {
+        try {
+            String expectedUsername = "testUsername";
+            authDAO.createAuth(expectedUsername);
+            assertThrows(DataAccessException.class, () -> authDAO.getAuth(existingToken.username()));
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException(e.getMessage());
         }
     }
 }

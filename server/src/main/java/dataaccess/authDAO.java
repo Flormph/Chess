@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.Records;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,8 +66,23 @@ public class authDAO {
         }
     }
 
-    public static String getAuth(String auth) {
-        return server.database.Database.getInstance().getToken(auth);
+    public static String getAuth(String auth) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT username FROM tokens WHERE auth = ?")) {
+                preparedStatement.setString(1, auth);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if(resultSet.next()) {
+                        return resultSet.getString("username");
+                    }
+                    else {
+                        throw new DataAccessException("AuthToken does not exist", 403);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
     }
 
     /**

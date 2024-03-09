@@ -57,7 +57,7 @@ public class DatabaseManager {
             try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS tokens (auth varchar(128), username varchar(128));")) {
                 preparedStatement.executeUpdate();
             }
-            try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS games (gameID int, whiteUsername varchar(128), blackUsername varchar(128), gameName varchar(128), game varchar(256));")) {
+            try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS games (gameID int, whiteUsername varchar(128), blackUsername varchar(128), gameName varchar(128), game varchar(2048));")) {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {

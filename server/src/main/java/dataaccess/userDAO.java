@@ -11,7 +11,7 @@ public class userDAO {
 
     public static String createUser(Records.UserData user) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            if(!hasUser(conn, user.username())) {
+            if(!hasUser(user.username())) {
                 try (var preparedStatement = conn.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")) {
                     preparedStatement.setString(1, user.username());
                     preparedStatement.setString(2, user.password());
@@ -56,12 +56,17 @@ public class userDAO {
         return null;
     }
 
-    private static boolean hasUser(Connection conn, String username) throws SQLException {
-        try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM users WHERE username = ?")) {
-            preparedStatement.setString(1, username);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return resultSet.next();
+    private static boolean hasUser(String username) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM users WHERE username = ?")) {
+                preparedStatement.setString(1, username);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return resultSet.next();
+                }
             }
+        }
+        catch(Exception e) {
+            throw new DataAccessException(e.getMessage(), 500);
         }
     }
 

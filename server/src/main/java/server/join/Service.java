@@ -35,7 +35,7 @@ public class Service extends server.extenders.Service{
         else if(!authDAO.hasAuth(request.auth)) {
             throw new DataAccessException("Error: unauthorized", 401);
         }
-        else if(!gameDAO.findGame(Integer.parseInt(request.gameID))) {
+        else if(!gameDAO.hasGame(Integer.parseInt(request.gameID))) {
             throw new DataAccessException("Error: game doesn't exist", 400);
         }
         else if(Objects.equals(team, ChessGame.TeamColor.WHITE) && !Objects.equals((gameDAO.getGame(Integer.parseInt(request.gameID))).whiteUsername(), null)) {

@@ -104,6 +104,20 @@ public class authDAO {
         }
     }
 
+    public static boolean hasAuth(String auth) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM tokens WHERE auth = ?")) {
+                preparedStatement.setString(1, auth);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        }
+        catch (Exception e) {
+            throw new DataAccessException(e.getMessage(), 500);
+        }
+    }
+
     public static void clearApplication() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var preparedStatement = conn.prepareStatement("DROP TABLE tokens")) {

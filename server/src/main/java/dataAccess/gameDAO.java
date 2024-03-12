@@ -144,7 +144,7 @@ public class gameDAO {
 
     public static void clearApplication() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("DROP Table games")) {
+            try (var preparedStatement = conn.prepareStatement("DROP TABLE games")) {
                 preparedStatement.executeUpdate();
             }
             catch(Exception e) {

@@ -1,4 +1,4 @@
-package serviceTests;
+package dataAccessTests;
 
 import chess.ChessGame;
 import model.Records;
@@ -12,7 +12,7 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SuppressWarnings("NewClassNamingConvention")
+
 public class dataAccessTests {
     private static TestServerFacade serverFacade;
     private static Server server;

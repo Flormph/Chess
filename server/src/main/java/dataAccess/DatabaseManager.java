@@ -15,7 +15,7 @@ public class DatabaseManager {
     static {
         try {
             try (var propStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties")) {
-                if (propStream == null) throw new Exception("Unable to laod db.properties");
+                if (propStream == null) throw new Exception("Unable to load db.properties");
                 Properties props = new Properties();
                 props.load(propStream);
                 databaseName = props.getProperty("db.name");
@@ -50,7 +50,7 @@ public class DatabaseManager {
     public static void createTables() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(connectionUrl, user, password);
-            conn.setCatalog("chess");
+            conn.setCatalog(databaseName);
             try (var preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS users (username varchar(128), password varchar(128), email varchar(128));")) {
                 preparedStatement.executeUpdate();
             }

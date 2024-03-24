@@ -13,7 +13,6 @@ public class Handler extends server.extenders.Handler{
             Service service = new Service();
             response = service.logout(request);
         } catch (DataAccessException e) {
-            //TODO A FLIP OR NOT TODO A FLIP (MAKE RESPONSE OBJECT FOR FAILURE
             response = new server.logout.Response(e.getMessage());
             Sresponse.body(serializer.toJson(response));
             Sresponse.status(e.getCode());

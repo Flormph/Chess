@@ -1,12 +1,21 @@
 import chess.*;
 
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.Scanner;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean isLoggedIn = false;
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception{
+        URI uri = new URI("http://localhost:8080");
+        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+        http.setDoOutput(true);
+
+        String logintoken = null;
+
         System.out.println("Welcome to 240 Chess. Type \"help\" to get started");
         displayPreloginUI();
     }

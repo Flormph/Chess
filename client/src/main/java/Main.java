@@ -1,18 +1,25 @@
 import chess.*;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean isLoggedIn = false;
-
+    public Main() throws URISyntaxException, IOException {
+    }
 
     public static void main(String[] args) throws Exception{
         URI uri = new URI("http://localhost:8080");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-        http.setDoOutput(true);
 
         String logintoken = null;
 
@@ -20,7 +27,7 @@ public class Main {
         displayPreloginUI();
     }
 
-    private static void displayPreloginUI() {
+    private static void displayPreloginUI() throws Exception{
         while (true) {
             if(!isLoggedIn) {
                 System.out.print("[LOGGED_OUT] >>> ");
@@ -49,7 +56,7 @@ public class Main {
         }
     }
 
-    private static void displayPostloginUI() {
+    private static void displayPostloginUI() throws Exception{
         while (isLoggedIn) {
             System.out.print("[LOGGED_IN] >>> ");
             String command = scanner.nextLine().toLowerCase();
@@ -103,7 +110,7 @@ public class Main {
         System.out.println("help - with possible commands");
     }
 
-    private static void login(String line) {
+    private static void login(String line) throws Exception{
         if(countWordsInLine(line) == 3) {
             scanner.next();
             String username = scanner.next();
@@ -118,7 +125,7 @@ public class Main {
         }
     }
 
-    private static void logout() {
+    private static void logout() throws Exception{
         // Implementation of login functionality with server API
         System.out.println("Logged out successfully!");
         isLoggedIn = false;
@@ -130,13 +137,26 @@ public class Main {
         System.exit(0);
     }
 
-    private static void register(String line) {
+    private static void register(String line) throws Exception {
         if(countWordsInLine(line) == 4) {
+            URI uri = new URI("http://localhost:8080");
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            http.setRequestMethod("POST");
             scanner.next();
             String username = scanner.next();
             String password = scanner.next();
             String email = scanner.next();
-            // Implementation of registration functionality with server API
+            http.setDoOutput(true);
+            var body = Map.of("username", username, "password", password,"email",email);
+            try(var outputStream = http.getOutputStream()) {
+                var jsonBody = new Gson().toJson(body);
+                outputStream.write(jsonBody.getBytes());
+            }
+            http.connect();
+            try (InputStream respBody = http.getInputStream()) {
+                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
+            }
             System.out.println("Registered and logged in successfully!");
             isLoggedIn = true;
             displayPostloginUI();

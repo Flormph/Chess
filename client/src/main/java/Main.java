@@ -36,7 +36,8 @@ public class Main {
                 displayPostloginUI();
             }
             String command = scanner.nextLine().toLowerCase();
-            switch (command) {
+            String[] words = command.trim().split("\\s+");
+            switch (words[0]){
                 case "help":
                     displayHelp();
                     break;
@@ -111,7 +112,7 @@ public class Main {
     }
 
     private static void login(String line) throws Exception{
-        if(countWordsInLine(line) == 3) {
+        if(countWordsInLine(line.toString()) == 3) {
             scanner.next();
             String username = scanner.next();
             String password = scanner.next();
@@ -138,7 +139,7 @@ public class Main {
     }
 
     private static void register(String line) throws Exception {
-        if(countWordsInLine(line) == 4) {
+        if(countWordsInLine(line.toString()) == 4) {
             URI uri = new URI("http://localhost:8080");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             http.setRequestMethod("POST");
@@ -167,7 +168,7 @@ public class Main {
     }
 
     private static void createGame(String line) {
-        if(countWordsInLine(line) == 2) {
+        if(countWordsInLine(line.toString()) == 2) {
             scanner.next();
             String gameName = scanner.next();
             // Implementation of creating a game with server API

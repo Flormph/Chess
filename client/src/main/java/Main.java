@@ -16,6 +16,9 @@ public class Main {
     private static boolean isLoggedIn = false;
 
     private static String loginToken = null;
+    private static String getToken() {
+        return loginToken;
+    }
 
     public Main() throws URISyntaxException, IOException {
     }
@@ -157,6 +160,7 @@ public class Main {
         URI uri = new URI("http://localhost:8080/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("DELETE");
+        http.setRequestProperty("authToken", getToken());
 
         http.setDoOutput(true);
 
@@ -183,7 +187,7 @@ public class Main {
         URI uri = new URI("http://localhost:8080/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("DELETE");
-
+        http.setRequestProperty("authToken", getToken());
         http.setDoOutput(true);
 
         http.connect();

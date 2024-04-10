@@ -1,18 +1,14 @@
-import chess.*;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
     private static boolean isLoggedIn = false;
 
     private static String loginToken = null;
@@ -20,25 +16,25 @@ public class Main {
         return loginToken;
     }
 
-    public Main() throws URISyntaxException, IOException {
+    public Main() {
     }
 
     public static void main(String[] args) throws Exception{
         System.out.println("Welcome to 240 Chess. Type \"help\" to get started");
-        displayPreloginUI();
+        displayPreLoginUI();
     }
 
     public static void setToken(String token) {
         loginToken = token;
     }
 
-    private static void displayPreloginUI() throws Exception{
+    private static void displayPreLoginUI() throws Exception{
         while (true) {
             if(!isLoggedIn) {
                 System.out.print("[LOGGED_OUT] >>> ");
             }
             else {
-                displayPostloginUI();
+                displayPostLoginUI();
             }
             String command = scanner.nextLine().toLowerCase();
             String[] words = command.trim().split("\\s+");
@@ -62,7 +58,7 @@ public class Main {
         }
     }
 
-    private static void displayPostloginUI() throws Exception{
+    private static void displayPostLoginUI() throws Exception{
         while (isLoggedIn) {
             System.out.print("[LOGGED_IN] >>> ");
             String command = scanner.nextLine().toLowerCase();
@@ -74,7 +70,7 @@ public class Main {
                 case "logout":
                     logout();
                     isLoggedIn = false;
-                    displayPreloginUI();
+                    displayPreLoginUI();
                     break;
                 case "create":
                     createGame(command);
@@ -110,7 +106,7 @@ public class Main {
             System.out.println("create <NAME> - a game");
             System.out.println("list - games");
             System.out.println("join <ID> [WHITE|BLACK|<empty>] - a game");
-            System.out.println("ovbserve <ID> - a game");
+            System.out.println("observe <ID> - a game");
             System.out.println("logout - when you are done");
         }
         System.out.println("quit - playing chess");
@@ -139,16 +135,16 @@ public class Main {
                 System.out.println("Logged in successfully!");
                 isLoggedIn = true;
                 setToken(http.getHeaderField("authToken"));
-                displayPostloginUI();
+                displayPostLoginUI();
             }
             else {
-                String responseBody = null;
+                System.out.println("Login failed");
+                String responseBody;
                 try (InputStream respBody = http.getInputStream()) {
                     InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                     responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
-                System.out.println("Login failed");
             }
         }
         else {
@@ -170,10 +166,10 @@ public class Main {
             System.out.println("Logged out successfully!");
             setToken(null);
             isLoggedIn = false;
-            displayPreloginUI();
+            displayPreLoginUI();
         }
         else {
-            String responseBody = null;
+            String responseBody;
             System.out.println("Failed to logout");
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
@@ -198,7 +194,7 @@ public class Main {
             isLoggedIn = false;
         }
         else {
-            String responseBody = null;
+            String responseBody;
             System.out.println("Failed to logout");
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
@@ -240,16 +236,16 @@ public class Main {
                 System.out.println("Registered and logged in successfully!");
                 isLoggedIn = true;
                 setToken(http.getHeaderField("authToken"));
-                displayPostloginUI();
+                displayPostLoginUI();
             }
             else {
-                String responseBody = null;
+                System.out.println("Failed to register user");
+                String responseBody;
                 try (InputStream respBody = http.getInputStream()) {
                     InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                     responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
-                System.out.println("Registration failed");
             }
         }
         else {
@@ -257,51 +253,154 @@ public class Main {
         }
     }
 
-    private static void createGame(String line) {
+    private static void createGame(String line) throws Exception{
         String[] words = convertWords(line);
         if(words.length == 2) {
-            String gameName = words[1];
-            // Implementation of creating a game with server API
+            URI uri = new URI("http://localhost:8080/game");
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             System.out.println("Game created successfully!");
+            http.setRequestMethod("POST");
+            http.setRequestProperty("authToken", getToken());
+            String gameName = words[1];
+
+            http.setDoOutput(true);
+            var body = Map.of("gameName", gameName);
+            try(var outputStream = http.getOutputStream()) {
+                var jsonBody = new Gson().toJson(body);
+                outputStream.write(jsonBody.getBytes());
+            }
+            http.connect();
+
+            String responseBody;
+
+            if(http.getResponseCode() == 200) {
+                System.out.println("Game successfully created");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println(responseBody);
+                }
+            }
+            else {
+                System.out.println("Failed to create game");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                }
+            }
         }
         else {
             System.out.println("Invalid command. Please try again.");
         }
     }
 
-    private static void listGames() {
-        System.out.println("List of games:");
-        // Display list of games retrieved from server
+    private static void listGames() throws Exception {
+        URI uri = new URI("http://localhost:8080/game");
+        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+        System.out.println("Game created successfully!");
+        http.setRequestMethod("POST");
+        http.setRequestProperty("authToken", getToken());
+        http.setDoOutput(true);
+
+        http.connect();
+
+        String responseBody;
+
+        if(http.getResponseCode() == 200) {
+            System.out.println("List of games:");
+            try (InputStream respBody = http.getInputStream()) {
+                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                System.out.println(responseBody);
+            }
+        }
+        else {
+            System.out.println("Failed to retrieve list of games:");
+            try (InputStream respBody = http.getInputStream()) {
+                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+            }
+        }
     }
 
-    private static void joinGame(String line) {
+    private static void joinGame(String line) throws Exception {
         String[] words = convertWords(line);
         if(words.length == 3) {
+            URI uri = new URI("http://localhost:8080/game");
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            System.out.println("Game created successfully!");
+            http.setRequestMethod("POST");
+            http.setRequestProperty("authToken", getToken());
+            http.setDoOutput(true);
+
             String ID = words[1];
             String team = words[2];
-            // Implementation of joining a game with server API
-            System.out.println("Joined game successfully!");
+
+            var body = Map.of("playerColor", team, "gameID", ID);
+            try(var outputStream = http.getOutputStream()) {
+                var jsonBody = new Gson().toJson(body);
+                outputStream.write(jsonBody.getBytes());
+            }
+
+            http.connect();
+
+            String responseBody;
+
+            if(http.getResponseCode() == 200) {
+                System.out.println("Joined game successfully!");
+            }
+            else {
+                System.out.println("Failed to join game:");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                }
+            }
+            displayPostLoginUI();
         }
-        else if(words.length == 2) {
+        if(words.length == 2) {
+            URI uri = new URI("http://localhost:8080/game");
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            System.out.println("Game created successfully!");
+            http.setRequestMethod("POST");
+            http.setRequestProperty("authToken", getToken());
+            http.setDoOutput(true);
+
             String ID = words[1];
-            // Implementation of joining a game with server API
-            System.out.println("Joined game successfully!");
+
+            var body = Map.of("gameID", ID);
+            try(var outputStream = http.getOutputStream()) {
+                var jsonBody = new Gson().toJson(body);
+                outputStream.write(jsonBody.getBytes());
+            }
+
+            http.connect();
+
+            String responseBody;
+
+            if(http.getResponseCode() == 200) {
+                System.out.println("Joined game successfully!");
+            }
+            else {
+                System.out.println("Failed to join game:");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                }
+            }
+            displayPostLoginUI();
         }
         else {
             System.out.println("Invalid command. Please try again.");
         }
     }
 
-    private static void joinObserver(String line) {
-        String[] words = convertWords(line);
-        if(words.length == 2) {
-            String ID = words[1];
-            // Implementation of joining game as an observer with server API
-            System.out.println("Joined game as observer successfully!");
-        }
-        else {
-            System.out.println("Invalid command. Please try again.");
-        }
+    private static void joinObserver(String line) throws Exception {
+        joinGame(line);
     }
 
     private static String[] convertWords(String line) {

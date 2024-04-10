@@ -14,17 +14,19 @@ import java.util.Scanner;
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean isLoggedIn = false;
+
+    private static String loginToken = null;
+
     public Main() throws URISyntaxException, IOException {
     }
 
     public static void main(String[] args) throws Exception{
-        URI uri = new URI("http://localhost:8080");
-        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-
-        String logintoken = null;
-
         System.out.println("Welcome to 240 Chess. Type \"help\" to get started");
         displayPreloginUI();
+    }
+
+    public static void setToken(String token) {
+        loginToken = token;
     }
 
     private static void displayPreloginUI() throws Exception{
@@ -115,12 +117,36 @@ public class Main {
     private static void login(String line) throws Exception{
         String[] words = convertWords(line);
         if(words.length == 3) {
+            URI uri = new URI("http://localhost:8080/session");
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            http.setRequestMethod("POST");
             String username = words[1];
             String password = words[2];
-            // Implementation of login functionality with server API
-            System.out.println("Logged in successfully!");
-            isLoggedIn = true;
-            displayPostloginUI();
+
+            http.setDoOutput(true);
+            var body = Map.of("username", username, "password", password);
+            try(var outputStream = http.getOutputStream()) {
+                var jsonBody = new Gson().toJson(body);
+                outputStream.write(jsonBody.getBytes());
+            }
+            http.connect();
+
+
+            if(http.getResponseCode() == 200) {
+                System.out.println("Logged in successfully!");
+                isLoggedIn = true;
+                setToken(http.getHeaderField("authToken"));
+                displayPostloginUI();
+            }
+            else {
+                String responseBody = null;
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                }
+                System.out.println("Login failed");
+            }
         }
         else {
             System.out.println("Invalid command. Please try again.");
@@ -128,10 +154,29 @@ public class Main {
     }
 
     private static void logout() throws Exception{
-        // Implementation of login functionality with server API
-        System.out.println("Logged out successfully!");
-        isLoggedIn = false;
-        displayPreloginUI();
+        URI uri = new URI("http://localhost:8080/session");
+        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+        http.setRequestMethod("DELETE");
+
+        http.setDoOutput(true);
+
+        http.connect();
+
+        if(http.getResponseCode() == 200) {
+            System.out.println("Logged out successfully!");
+            setToken(null);
+            isLoggedIn = false;
+            displayPreloginUI();
+        }
+        else {
+            String responseBody = null;
+            System.out.println("Failed to logout");
+            try (InputStream respBody = http.getInputStream()) {
+                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+            }
+        }
     }
 
     private static void quit() {
@@ -151,20 +196,28 @@ public class Main {
 
             http.setDoOutput(true);
             var body = Map.of("username", username, "password", password,"email",email);
-            System.out.print(body);
             try(var outputStream = http.getOutputStream()) {
                 var jsonBody = new Gson().toJson(body);
                 outputStream.write(jsonBody.getBytes());
             }
             http.connect();
-            try (InputStream respBody = http.getInputStream()) {
-                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
-            }
 
-            System.out.println("Registered and logged in successfully!");
-            isLoggedIn = true;
-            displayPostloginUI();
+
+            if(http.getResponseCode() == 200) {
+                System.out.println("Registered and logged in successfully!");
+                isLoggedIn = true;
+                setToken(http.getHeaderField("authToken"));
+                displayPostloginUI();
+            }
+            else {
+                String responseBody = null;
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                }
+                System.out.println("Registration failed");
+            }
         }
         else {
             System.out.println("Invalid command. Please try again.");

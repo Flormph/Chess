@@ -37,7 +37,7 @@ public class Main {
             }
             String command = scanner.nextLine().toLowerCase();
             String[] words = command.trim().split("\\s+");
-            switch (words[0]){
+            switch (words[0]) {
                 case "help":
                     displayHelp();
                     break;
@@ -61,7 +61,8 @@ public class Main {
         while (isLoggedIn) {
             System.out.print("[LOGGED_IN] >>> ");
             String command = scanner.nextLine().toLowerCase();
-            switch (command) {
+            String[] words = command.trim().split("\\s");
+            switch (words[0]) {
                 case "help":
                     displayHelp();
                     break;
@@ -112,10 +113,10 @@ public class Main {
     }
 
     private static void login(String line) throws Exception{
-        if(countWordsInLine(line.toString()) == 3) {
-            scanner.next();
-            String username = scanner.next();
-            String password = scanner.next();
+        String[] words = convertWords(line);
+        if(words.length == 3) {
+            String username = words[1];
+            String password = words[2];
             // Implementation of login functionality with server API
             System.out.println("Logged in successfully!");
             isLoggedIn = true;
@@ -139,14 +140,15 @@ public class Main {
     }
 
     private static void register(String line) throws Exception {
-        if(countWordsInLine(line.toString()) == 4) {
-            URI uri = new URI("http://localhost:8080");
+        String[] words = convertWords(line);
+        if(words.length == 4) {
+            /*URI uri = new URI("http://localhost:8080");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            http.setRequestMethod("POST");
-            scanner.next();
-            String username = scanner.next();
-            String password = scanner.next();
-            String email = scanner.next();
+            http.setRequestMethod("POST");*/
+            String username = words[1];
+            String password = words[2];
+            String email = words[3];
+            /*
             http.setDoOutput(true);
             var body = Map.of("username", username, "password", password,"email",email);
             try(var outputStream = http.getOutputStream()) {
@@ -158,6 +160,7 @@ public class Main {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                 System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
             }
+             */
             System.out.println("Registered and logged in successfully!");
             isLoggedIn = true;
             displayPostloginUI();
@@ -168,9 +171,9 @@ public class Main {
     }
 
     private static void createGame(String line) {
-        if(countWordsInLine(line.toString()) == 2) {
-            scanner.next();
-            String gameName = scanner.next();
+        String[] words = convertWords(line);
+        if(words.length == 2) {
+            String gameName = words[1];
             // Implementation of creating a game with server API
             System.out.println("Game created successfully!");
         }
@@ -180,22 +183,20 @@ public class Main {
     }
 
     private static void listGames() {
-        // Implementation of listing games from server API
         System.out.println("List of games:");
         // Display list of games retrieved from server
     }
 
     private static void joinGame(String line) {
-        if(countWordsInLine(line) == 3) {
-            scanner.next();
-            String ID = scanner.next();
-            String team = scanner.next();
+        String[] words = convertWords(line);
+        if(words.length == 3) {
+            String ID = words[1];
+            String team = words[2];
             // Implementation of joining a game with server API
             System.out.println("Joined game successfully!");
         }
-        else if(countWordsInLine(line) == 2) {
-            scanner.next();
-            String ID = scanner.next();
+        else if(words.length == 2) {
+            String ID = words[1];
             // Implementation of joining a game with server API
             System.out.println("Joined game successfully!");
         }
@@ -205,9 +206,9 @@ public class Main {
     }
 
     private static void joinObserver(String line) {
-        if(countWordsInLine(line) == 2) {
-            scanner.next();
-            String ID = scanner.next();
+        String[] words = convertWords(line);
+        if(words.length == 2) {
+            String ID = words[1];
             // Implementation of joining game as an observer with server API
             System.out.println("Joined game as observer successfully!");
         }
@@ -216,15 +217,10 @@ public class Main {
         }
     }
 
-    private static int countWordsInLine(String line) {
+    private static String[] convertWords(String line) {
         if (line == null || line.isEmpty()) {
-            return 0;
+            return null;
         }
-
-        // Split the line into words using whitespace as delimiter
-        String[] words = line.trim().split("\\s+");
-
-        // Return the number of words
-        return words.length;
+        return line.trim().split("\\s+");
     }
 }

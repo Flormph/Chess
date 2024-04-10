@@ -98,7 +98,7 @@ public class Main {
             System.out.print("register <USERNAME> <PASSWORD> <EMAIL>");
             System.out.print("- to create an account\n");
             System.out.print("\u001b[35;40;m");
-            System.out.println("login <USERNAME> <PASSWORD>");
+            System.out.print("login <USERNAME> <PASSWORD>-");
             System.out.print("to play chess\n");
         }
         else {
@@ -142,15 +142,16 @@ public class Main {
     private static void register(String line) throws Exception {
         String[] words = convertWords(line);
         if(words.length == 4) {
-            /*URI uri = new URI("http://localhost:8080");
+            URI uri = new URI("http://localhost:8080/user");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            http.setRequestMethod("POST");*/
+            http.setRequestMethod("POST");
             String username = words[1];
             String password = words[2];
             String email = words[3];
-            /*
+
             http.setDoOutput(true);
             var body = Map.of("username", username, "password", password,"email",email);
+            System.out.print(body);
             try(var outputStream = http.getOutputStream()) {
                 var jsonBody = new Gson().toJson(body);
                 outputStream.write(jsonBody.getBytes());
@@ -160,7 +161,7 @@ public class Main {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                 System.out.println(new Gson().fromJson(inputStreamReader, Map.class));
             }
-             */
+
             System.out.println("Registered and logged in successfully!");
             isLoggedIn = true;
             displayPostloginUI();

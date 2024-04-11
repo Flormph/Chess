@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import ui.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static boolean isLoggedIn = false;
+    private static String port = "8080";
 
     private static String loginToken = null;
     private static String getToken() {
@@ -21,6 +23,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         System.out.println("Welcome to 240 Chess. Type \"help\" to get started");
+        port = args[1];
         displayPreLoginUI();
     }
 
@@ -47,7 +50,7 @@ public class Main {
                     System.exit(0);
                     break;
                 case "login":
-                    login(command);
+                    new Login(command);
                     break;
                 case "register":
                     register(command);
@@ -113,47 +116,10 @@ public class Main {
         System.out.println("help - with possible commands");
     }
 
-    private static void login(String line) throws Exception{
-        String[] words = convertWords(line);
-        if(words.length == 3) {
-            URI uri = new URI("http://localhost:8080/session");
-            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            http.setRequestMethod("POST");
-            String username = words[1];
-            String password = words[2];
 
-            http.setDoOutput(true);
-            var body = Map.of("username", username, "password", password);
-            try(var outputStream = http.getOutputStream()) {
-                var jsonBody = new Gson().toJson(body);
-                outputStream.write(jsonBody.getBytes());
-            }
-            http.connect();
-
-
-            if(http.getResponseCode() == 200) {
-                System.out.println("Logged in successfully!");
-                isLoggedIn = true;
-                setToken(http.getHeaderField("authToken"));
-                displayPostLoginUI();
-            }
-            else {
-                System.out.println("Login failed");
-                String responseBody;
-                try (InputStream respBody = http.getInputStream()) {
-                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
-                }
-            }
-        }
-        else {
-            System.out.println("Invalid command. Please try again.");
-        }
-    }
 
     private static void logout() throws Exception{
-        URI uri = new URI("http://localhost:8080/session");
+        URI uri = new URI("http://localhost:\" + port + \"/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("DELETE");
         http.setRequestProperty("authToken", getToken());
@@ -180,7 +146,7 @@ public class Main {
     }
 
     private static void quit() throws Exception {
-        URI uri = new URI("http://localhost:8080/session");
+        URI uri = new URI("http://localhost:\" + port + \"/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("DELETE");
         http.setRequestProperty("authToken", getToken());
@@ -216,7 +182,7 @@ public class Main {
     private static void register(String line) throws Exception {
         String[] words = convertWords(line);
         if(words.length == 4) {
-            URI uri = new URI("http://localhost:8080/user");
+            URI uri = new URI("http://localhost:\" + port + \"/user");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             http.setRequestMethod("POST");
             String username = words[1];
@@ -256,7 +222,7 @@ public class Main {
     private static void createGame(String line) throws Exception{
         String[] words = convertWords(line);
         if(words.length == 2) {
-            URI uri = new URI("http://localhost:8080/game");
+            URI uri = new URI("http://localhost:\" + port + \"/game");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             System.out.println("Game created successfully!");
             http.setRequestMethod("POST");
@@ -296,10 +262,10 @@ public class Main {
     }
 
     private static void listGames() throws Exception {
-        URI uri = new URI("http://localhost:8080/game");
+        URI uri = new URI("http://localhost:\" + port + \"/game");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         System.out.println("Game created successfully!");
-        http.setRequestMethod("POST");
+        http.setRequestMethod("GET");
         http.setRequestProperty("authToken", getToken());
         http.setDoOutput(true);
 
@@ -328,10 +294,10 @@ public class Main {
     private static void joinGame(String line) throws Exception {
         String[] words = convertWords(line);
         if(words.length == 3) {
-            URI uri = new URI("http://localhost:8080/game");
+            URI uri = new URI("http://localhost:\" + port + \"/game");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             System.out.println("Game created successfully!");
-            http.setRequestMethod("POST");
+            http.setRequestMethod("PUT");
             http.setRequestProperty("authToken", getToken());
             http.setDoOutput(true);
 
@@ -362,10 +328,10 @@ public class Main {
             displayPostLoginUI();
         }
         if(words.length == 2) {
-            URI uri = new URI("http://localhost:8080/game");
+            URI uri = new URI("http://localhost:\" + port + \"/game");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             System.out.println("Game created successfully!");
-            http.setRequestMethod("POST");
+            http.setRequestMethod("PUT");
             http.setRequestProperty("authToken", getToken());
             http.setDoOutput(true);
 

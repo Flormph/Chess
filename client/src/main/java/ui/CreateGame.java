@@ -8,33 +8,40 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Map;
 
-public class Login {
-    static void login(String line, int port) throws Exception{
-        String[] words = Util.convertWords(line);
-        if(words.length == 3) {
-            URI uri = new URI("http://localhost:" + port + "/session");
+import static ui.Util.convertWords;
+
+public class CreateGame {
+    static void createGame(String line, int port) throws Exception{
+        Util util = Util.getInstance();
+        String[] words = convertWords(line);
+        if(words.length == 2) {
+            URI uri = new URI("http://localhost:" + port + "/game");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            System.out.println("Game created successfully!");
             http.setRequestMethod("POST");
-            String username = words[1];
-            String password = words[2];
+            http.setRequestProperty("authToken", util.getToken());
+            String gameName = words[1];
 
             http.setDoOutput(true);
-            var body = Map.of("username", username, "password", password);
+            var body = Map.of("gameName", gameName);
             try(var outputStream = http.getOutputStream()) {
                 var jsonBody = new Gson().toJson(body);
                 outputStream.write(jsonBody.getBytes());
             }
             http.connect();
 
+            String responseBody;
 
             if(http.getResponseCode() == 200) {
-                System.out.println("Logged in successfully!");
-                Util.setToken(http.getHeaderField("authToken"));
-                Ui.displayPostLoginUI();
+                System.out.println("Game successfully created");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println(responseBody);
+                }
             }
             else {
-                System.out.println("Login failed");
-                String responseBody;
+                System.out.println("Failed to create game");
                 try (InputStream respBody = http.getInputStream()) {
                     InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                     responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();

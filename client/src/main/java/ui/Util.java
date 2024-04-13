@@ -6,10 +6,17 @@ import java.util.Objects;
 public class Util {
     public static Util util;
     private String token;
-    private int port;
+    private final int port;
     public static Util getInstance() {
         return Objects.requireNonNullElseGet(util, Util::new);
     }
+
+public static Util getInstance(int port) {
+        if(util == null) {
+            util = new Util(8080);
+        }
+    return util;
+}
 
     private static String loginToken = null;
 
@@ -34,10 +41,6 @@ public class Util {
             return null;
         }
         return line.trim().split("\\s+");
-    }
-
-    public static void setPort(int port) {
-        this.port = port;
     }
 
     public int getPort() {

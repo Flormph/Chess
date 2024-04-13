@@ -11,7 +11,7 @@ import java.util.Map;
 import static ui.Util.convertWords;
 
 public class CreateGame {
-    static void createGame(String line, int port) throws Exception{
+    public static int createGame(String line, int port) throws Exception{
         Util util = Util.getInstance();
         String[] words = convertWords(line);
         if(words.length == 2) {
@@ -48,9 +48,11 @@ public class CreateGame {
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
             }
+            return http.getResponseCode();
         }
         else {
             System.out.println("Invalid command. Please try again.");
         }
+        return 0;
     }
 }

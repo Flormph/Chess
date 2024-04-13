@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class Login {
-    static void login(String line, int port) throws Exception{
+    public static void login(String line, int port) throws Exception{
         String[] words = Util.convertWords(line);
         if(words.length == 3) {
             URI uri = new URI("http://localhost:" + port + "/session");

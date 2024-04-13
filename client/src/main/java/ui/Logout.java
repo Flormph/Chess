@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class Logout {
-    static void logout(int port) throws Exception{
+    public static void logout(int port) throws Exception{
         Util util = Util.getInstance();
         URI uri = new URI("http://localhost:" + port + "/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();

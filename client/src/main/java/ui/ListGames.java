@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class ListGames {
-    static void listGames(int port) throws Exception {
+    public static void listGames(int port) throws Exception {
         Util util = Util.getInstance();
         URI uri = new URI("http://localhost:" + port + "/game");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();

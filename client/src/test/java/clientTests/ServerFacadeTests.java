@@ -28,7 +28,7 @@ public class ServerFacadeTests {
 
     @Test
     void register() throws Exception {
-        AuthData authData = facade.register("player1", "password", "p1@email.com");
+        int serverResponse = facade.register("register Joseph Pass Lee", facade.port);
         Assertions.assertTrue(authData.authToken().length() > 10);
     }
 

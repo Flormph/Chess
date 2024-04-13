@@ -11,7 +11,7 @@ import java.util.Map;
 import static ui.Util.convertWords;
 
 public class JoinGame {
-    static void joinGame(String line, int port) throws Exception {
+    static int joinGame(String line, int port) throws Exception {
         Util util = Util.getInstance();
         String[] words = util.convertWords(line);
         if(words.length == 3) {
@@ -46,6 +46,7 @@ public class JoinGame {
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
             }
+            return http.getResponseCode();
             Ui.displayPostLoginUI();
         }
         if(words.length == 2) {
@@ -79,10 +80,11 @@ public class JoinGame {
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
             }
-            Ui.displayPostLoginUI();
+            return http.getResponseCode();
         }
         else {
             System.out.println("Invalid command. Please try again.");
         }
+        return 0;
     }
 }

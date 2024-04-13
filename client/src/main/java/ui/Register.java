@@ -11,7 +11,7 @@ import java.util.Map;
 import static ui.Util.*;
 
 public class Register {
-    static void register(String line, int port) throws Exception {
+    public static int register(String line, int port) throws Exception {
         Util util = getInstance();
         String[] words = convertWords(line);
         if(words.length == 4) {
@@ -45,9 +45,11 @@ public class Register {
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
             }
+            return http.getResponseCode();
         }
         else {
             System.out.println("Invalid command. Please try again.");
         }
+        return 500;
     }
 }

@@ -53,7 +53,7 @@ public class Response {
     String message;
     String username;
     public String authToken;
-    String gameID;
+    public String gameID;
     HashSet<Records.GameData> games;
 
     public String getMessage() {

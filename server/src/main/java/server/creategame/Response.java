@@ -12,5 +12,4 @@ public class Response extends server.extenders.Response{
         super(errorMessage);
     }
     public Response(int gameID) { super(gameID); }
-
 }

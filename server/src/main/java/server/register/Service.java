@@ -12,7 +12,7 @@ public class Service extends server.extenders.Service{
      * @param request provided username, password, and email to create a user from
      * @return returns success response or a fail response
      */
-    public server.register.Response register(Request request) throws DataAccessException {
+    public static server.register.Response register(Request request) throws DataAccessException {
         if(request.username == null || request.username.isEmpty() || request.email == null || request.email.isEmpty() || request.password == null || request.password.isEmpty()) {
             throw new DataAccessException("Error: bad request", 400);
         }

@@ -1,22 +1,8 @@
 package ui;
 
-
-import java.util.Objects;
-
 public class Util {
     public static Util util;
-    private String token;
-    private final int port;
-    public static Util getInstance() {
-        return Objects.requireNonNullElseGet(util, Util::new);
-    }
-
-public static Util getInstance(int port) {
-        if(util == null) {
-            util = new Util(8080);
-        }
-    return util;
-}
+    public static int port = 0;
 
     private static String loginToken = null;
 
@@ -25,7 +11,7 @@ public static Util getInstance(int port) {
     }
 
     public Util(int port) {
-        this.port = port;
+        Util.port = port;
     }
 
     public static String getToken() {
@@ -43,7 +29,7 @@ public static Util getInstance(int port) {
         return line.trim().split("\\s+");
     }
 
-    public int getPort() {
+    public static int getPort() {
         return port;
     }
 

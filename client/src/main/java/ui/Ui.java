@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class Ui {
     public static Ui ui;
     private static final Scanner scanner = new Scanner(System.in);
-    static Util util = Util.getInstance();
 
 
     public static void displayPreLoginUI() throws Exception{
@@ -21,16 +20,19 @@ public class Ui {
             switch (words[0]) {
                 case "help":
                     displayHelp();
+                    displayPreLoginUI();
                     break;
                 case "quit":
-                    Quit.quit(util.getPort());
+                    Quit.quit(Util.getPort());
                     System.exit(0);
                     break;
                 case "login":
-                    Login.login(command, util.getPort());
+                    Login.login(command, Util.getPort());
+                    displayPostLoginUI();
                     break;
                 case "register":
-                    Register.register(command, util.getPort());
+                    Register.register(command, Util.getPort());
+                    displayPostLoginUI();
                     break;
                 default:
                     System.out.println("Invalid command. Please try again.");
@@ -39,32 +41,38 @@ public class Ui {
     }
 
     static void displayPostLoginUI() throws Exception{
-        while (util.getToken() != null) {
+        while (Util.getToken() != null) {
             System.out.print("[LOGGED_IN] >>> ");
             String command = scanner.nextLine().toLowerCase();
             String[] words = command.trim().split("\\s");
             switch (words[0]) {
                 case "help":
                     displayHelp();
+                    displayPostLoginUI();
                     break;
                 case "logout":
-                    Logout.logout(util.getPort());
+                    Logout.logout(Util.getPort());
                     displayPreLoginUI();
                     break;
                 case "create":
-                    CreateGame.createGame(command, util.getPort());
+                    CreateGame.createGame(command, Util.getPort());
+                    displayPostLoginUI();
+
                     break;
                 case "list":
-                    ListGames.listGames(util.getPort());
+                    ListGames.listGames(Util.getPort());
+                    displayPostLoginUI();
                     break;
                 case "join":
-                    JoinGame.joinGame(command, util.getPort());
+                    JoinGame.joinGame(command, Util.getPort());
+                    displayPostLoginUI();
                     break;
                 case "observe":
-                    JoinObserver.joinObserver(command, util.getPort());
+                    JoinObserver.joinObserver(command, Util.getPort());
+                    displayPostLoginUI();
                     break;
                 case "quit":
-                    Quit.quit(util.getPort());
+                    Quit.quit(Util.getPort());
                     break;
                 default:
                     System.out.println("Invalid command. Please try again.");

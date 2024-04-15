@@ -12,12 +12,15 @@ import java.util.Scanner;
 import static ui.Util.*;
 
 public class Quit {
-    static void quit(int port) throws Exception {
-        Util util = getInstance();
+    public static int quit(int port) throws Exception {
+        if(getToken() == null) {
+            return 200;
+        }
+
         URI uri = new URI("http://localhost:" + port + "/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("DELETE");
-        http.setRequestProperty("authToken", getToken());
+        http.setRequestProperty("authorization", getToken());
         http.setDoOutput(true);
 
         http.connect();
@@ -36,13 +39,12 @@ public class Quit {
             }
             System.out.println("quit anyway? (y/n)");
             if(new Scanner(System.in).next().equalsIgnoreCase("n")) {
-                return;
+                return 0;
             }
             else {
-                System.exit(0);
+                return http.getResponseCode();
             }
         }
-        setToken(null);
-        System.exit(0);
+        return http.getResponseCode();
     }
 }

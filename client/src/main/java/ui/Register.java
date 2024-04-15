@@ -12,7 +12,6 @@ import static ui.Util.*;
 
 public class Register {
     public static int register(String line, int port) throws Exception {
-        Util util = getInstance();
         String[] words = convertWords(line);
         if(words.length == 4) {
             URI uri = new URI("http://localhost:" + port + "/user");
@@ -34,7 +33,6 @@ public class Register {
             if(http.getResponseCode() == 200) {
                 System.out.println("Registered and logged in successfully!");
                 setToken(http.getHeaderField("authToken"));
-                Ui.displayPostLoginUI();
             }
             else {
                 System.out.println("Failed to register user");

@@ -9,13 +9,12 @@ import java.net.URI;
 import java.util.Map;
 
 public class ListGames {
-    public static void listGames(int port) throws Exception {
-        Util util = Util.getInstance();
+    public static int listGames(int port) throws Exception {
         URI uri = new URI("http://localhost:" + port + "/game");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         System.out.println("Game created successfully!");
         http.setRequestMethod("GET");
-        http.setRequestProperty("authToken", util.getToken());
+        http.setRequestProperty("authorization", Util.getToken());
         http.setDoOutput(true);
 
         http.connect();
@@ -38,5 +37,6 @@ public class ListGames {
                 System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
             }
         }
+        return http.getResponseCode();
     }
 }

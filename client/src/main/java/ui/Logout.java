@@ -9,12 +9,11 @@ import java.net.URI;
 import java.util.Map;
 
 public class Logout {
-    public static void logout(int port) throws Exception{
-        Util util = Util.getInstance();
+    public static int logout(int port) throws Exception{
         URI uri = new URI("http://localhost:" + port + "/session");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         http.setRequestMethod("DELETE");
-        http.setRequestProperty("authToken", util.getToken());
+        http.setRequestProperty("authorization", Util.getToken());
 
         http.setDoOutput(true);
 
@@ -22,8 +21,7 @@ public class Logout {
 
         if(http.getResponseCode() == 200) {
             System.out.println("Logged out successfully!");
-            util.setToken(null);
-            Ui.displayPreLoginUI();
+            Util.setToken(null);
         }
         else {
             String responseBody;
@@ -34,5 +32,6 @@ public class Logout {
                 System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
             }
         }
+        return http.getResponseCode();
     }
 }

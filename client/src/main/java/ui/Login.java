@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class Login {
-    public static void login(String line, int port) throws Exception{
+    public static int login(String line, int port) throws Exception{
         String[] words = Util.convertWords(line);
         if(words.length == 3) {
             URI uri = new URI("http://localhost:" + port + "/session");
@@ -30,7 +30,6 @@ public class Login {
             if(http.getResponseCode() == 200) {
                 System.out.println("Logged in successfully!");
                 Util.setToken(http.getHeaderField("authToken"));
-                Ui.displayPostLoginUI();
             }
             else {
                 System.out.println("Login failed");
@@ -41,9 +40,12 @@ public class Login {
                     System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                 }
             }
+            return http.getResponseCode();
         }
         else {
             System.out.println("Invalid command. Please try again.");
+            return 0;
+
         }
     }
 }

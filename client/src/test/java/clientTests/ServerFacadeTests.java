@@ -1,6 +1,5 @@
 package clientTests;
 
-import model.Records;
 import server.clearapplication.*;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -11,10 +10,9 @@ public class ServerFacadeTests {
 
     private static Server tempserver;
     static ServerFacade facade;
-    private String existingUsername = "joe";
-    private String existingPass = "pass";
-    private String existingEmail = "email";
-    private String existingGameName = "myGame";
+    private final String existingUsername = "joe";
+    private final String existingPass = "pass";
+    private final String existingEmail = "email";
     private String existingAuth;
     private String existingGameID;
     private void registerExistingUser() throws Exception{
@@ -26,6 +24,7 @@ public class ServerFacadeTests {
     }
 
     private void createExistingGame() throws Exception{
+        String existingGameName = "myGame";
         existingGameID = server.creategame.Service.createGame(new server.creategame.Request(existingGameName, existingAuth)).gameID;
     }
 
@@ -69,13 +68,13 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void badLogout() throws Exception {
+    void badLogout() {
         Assertions.assertThrows(java.io.IOException.class, () -> facade.logout(facade.port));
 
     }
 
     @Test
-    void badLogin() throws Exception {
+    void badLogin() {
         Assertions.assertThrows(java.io.IOException.class, () -> facade.login("login Joseph ee", facade.port));
     }
 
@@ -122,7 +121,7 @@ public class ServerFacadeTests {
 
     @Test
     void badJoinObserver() throws Exception {
-        int serverResponse = facade.joinGame("join", facade.port);
+        int serverResponse = facade.joinObserver("join", facade.port);
         Assertions.assertNotEquals(200, serverResponse);
     }
 
@@ -134,7 +133,7 @@ public class ServerFacadeTests {
         facade.logout(facade.port);
         registerAltExistingUser();
         Util.setToken(existingAuth);
-        int serverResponse = facade.joinGame("join " + existingGameID, facade.port);
+        int serverResponse = facade.joinObserver("join " + existingGameID, facade.port);
         Assertions.assertEquals(200, serverResponse);
     }
 
@@ -148,7 +147,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void badListGames() throws Exception {
+    void badListGames() {
         Assertions.assertThrows(java.io.IOException.class, () -> facade.listGames(facade.port));
     }
 

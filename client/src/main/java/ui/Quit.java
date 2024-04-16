@@ -27,6 +27,7 @@ public class Quit {
 
         if(http.getResponseCode() == 200) {
             System.out.println("Logged out successfully!");
+            System.out.println("Closing the application!");
             setToken(null);
         }
         else {

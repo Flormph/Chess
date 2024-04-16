@@ -11,12 +11,11 @@ import java.util.Map;
 import static ui.Util.convertWords;
 
 public class CreateGame {
-    public static ChessGame createGame(String line, int port) throws Exception{
+    public static int createGame(String line, int port) throws Exception{
         String[] words = convertWords(line);
         if(words.length == 2) {
             URI uri = new URI("http://localhost:" + port + "/game");
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            System.out.println("Game created successfully!");
             http.setRequestMethod("POST");
             http.setRequestProperty("authorization", Util.getToken());
             String gameName = words[1];
@@ -33,11 +32,6 @@ public class CreateGame {
 
             if(http.getResponseCode() == 200) {
                 System.out.println("Game successfully created");
-                try (InputStream respBody = http.getInputStream()) {
-                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                    System.out.println(responseBody);
-                }
             }
             else {
                 System.out.println("Failed to create game");

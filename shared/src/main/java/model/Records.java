@@ -11,15 +11,14 @@ public class Records {
     public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         @Override
         public String toString() {
-            return "{\"gameID\": " +
-                    gameID +
-                    ", \"whiteUsername\":\"" +
-                    whiteUsername +
-                    "\", \"blackUsername\":\"" +
-                    blackUsername +
-                    "\", \"gameName:\"" +
-                    gameName +
-                    "\"}";
+            String out = "";
+            out += "\u001b[1m";
+            out += "Game Name:\t\t" + gameName + "\n";
+            out += "Game ID:\t\t" + gameID + "\n";
+            out += "White player:\t" + whiteUsername + "\n";
+            out += "Black player:\t" + blackUsername + "\n";
+            out += game.toString() + "\n";
+            return out;
         }
     }
 

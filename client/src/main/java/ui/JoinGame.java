@@ -16,76 +16,93 @@ public class JoinGame {
     public static int joinGame(String line, int port) throws Exception {
         String[] words = convertWords(line);
         if(words.length == 3) {
-            URI uri = new URI("http://localhost:" + port + "/game");
-            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            System.out.println("Game created successfully!");
-            http.setRequestMethod("PUT");
-            http.setRequestProperty("authorization", Util.getToken());
-            http.setDoOutput(true);
+            try {
+                URI uri = new URI("http://localhost:" + port + "/game");
+                HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+                http.setRequestMethod("PUT");
+                http.setRequestProperty("authorization", Util.getToken());
+                http.setDoOutput(true);
 
-            String ID = words[1];
-            ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(words[2]);
+                String ID = words[1];
+                ChessGame.TeamColor team = ChessGame.TeamColor.valueOf(words[2]);
 
-            var body = Map.of("playerColor", team, "gameID", ID);
-            try(var outputStream = http.getOutputStream()) {
-                var jsonBody = new Gson().toJson(body);
-                outputStream.write(jsonBody.getBytes());
-            }
-
-            http.connect();
-
-            String responseBody;
-
-            if(http.getResponseCode() == 200) {
-                System.out.println("Joined game successfully!");
-                try (InputStream respBody = http.getInputStream()) {
-                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                    Records.GameData game = new Gson().fromJson(inputStreamReader, Records.GameData.class);
-                    Util.setGame(game);
+                var body = Map.of("playerColor", team, "gameID", ID);
+                try (var outputStream = http.getOutputStream()) {
+                    var jsonBody = new Gson().toJson(body);
+                    outputStream.write(jsonBody.getBytes());
                 }
-            }
-            else {
-                System.out.println("Failed to join game:");
-                try (InputStream respBody = http.getInputStream()) {
-                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+
+                http.connect();
+
+                String responseBody;
+
+                if (http.getResponseCode() == 200) {
+                    try (InputStream respBody = http.getInputStream()) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                        Records.GameData game = new Gson().fromJson(inputStreamReader, Records.GameData.class);
+                        Util.setGame(game);
+                        System.out.println("Joined game successfully!");
+                    }
+                    catch(Exception e) {
+                        System.out.print(e.getMessage());
+                    }
+                } else {
+                    System.out.println("Failed to join game:");
+                    try (InputStream respBody = http.getInputStream()) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                        responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                        System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                    }
                 }
+                return http.getResponseCode();
             }
-            return http.getResponseCode();
+            catch(Exception e) {
+                System.out.print(e.getMessage());
+            }
         }
         if(words.length == 2) {
-            URI uri = new URI("http://localhost:" + port + "/game");
-            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            System.out.println("Game created successfully!");
-            http.setRequestMethod("PUT");
-            http.setRequestProperty("authorization", Util.getToken());
-            http.setDoOutput(true);
+            try {
+                URI uri = new URI("http://localhost:" + port + "/game");
+                HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+                http.setRequestMethod("PUT");
+                http.setRequestProperty("authorization", Util.getToken());
+                http.setDoOutput(true);
 
-            String ID = words[1];
+                String ID = words[1];
 
-            var body = Map.of("gameID", ID);
-            try(var outputStream = http.getOutputStream()) {
-                var jsonBody = new Gson().toJson(body);
-                outputStream.write(jsonBody.getBytes());
-            }
-
-            http.connect();
-
-            String responseBody;
-
-            if(http.getResponseCode() == 200) {
-                System.out.println("Joined game successfully!");
-            }
-            else {
-                System.out.println("Failed to join game:");
-                try (InputStream respBody = http.getInputStream()) {
-                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                var body = Map.of("playerColor", "OBSERVER", "gameID", ID);
+                try (var outputStream = http.getOutputStream()) {
+                    var jsonBody = new Gson().toJson(body);
+                    outputStream.write(jsonBody.getBytes());
                 }
+
+                http.connect();
+
+                String responseBody;
+
+                if (http.getResponseCode() == 200) {
+                    try (InputStream respBody = http.getInputStream()) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                        Records.GameData game = new Gson().fromJson(inputStreamReader, Records.GameData.class);
+                        Util.setGame(game);
+                        System.out.println("Joined game successfully!");
+                    }
+                    catch(Exception e) {
+                        System.out.print(e.getMessage());
+                    }
+                } else {
+                    System.out.println("Failed to join game:");
+                    try (InputStream respBody = http.getInputStream()) {
+                        InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                        responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                        System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                    }
+                }
+                return http.getResponseCode();
             }
-            return http.getResponseCode();
+            catch(Exception e) {
+                System.out.print(e.getMessage());
+            }
         }
         else {
             System.out.println("Invalid command. Please try again.");

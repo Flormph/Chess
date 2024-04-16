@@ -10,10 +10,12 @@ import java.util.Arrays;
  */
 public class ChessBoard {
 
-    public ChessBoard() {
-    }
+
 
     ChessPiece[][] board = new ChessPiece[8][8]; //new board
+    public ChessBoard() {
+        resetBoard();
+    }
 
     /**
      * Adds a chess piece to the chessboard
@@ -89,8 +91,6 @@ public class ChessBoard {
         //Places pawn rows
         Arrays.fill(board[1], whitePawn);
         Arrays.fill(board[6], blackPawn);
-
-        System.out.print(this);
     }
 
     public ChessPosition findWhiteKing() {
@@ -141,21 +141,36 @@ public class ChessBoard {
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder();
+        out.append("\u001b[30;100m");
+        out.append("    A  B  C  D  E  F  G  H ");
+        out.append("\u001b[49m");
+        out.append("\n");
         for(int i = 8; i > 0; --i) {
             for(int j = 1; j < 9; ++j) {
-                ChessPosition currPos = new ChessPosition(i,j);
+                if (j == 1) {
+                    out.append("\u001b[30;100m");
+                    out.append(" ").append(i).append(" ");
+                }
+                ChessPosition currPos = new ChessPosition(i, j);
                 ChessPiece currPiece = getPiece(currPos);
-                out.append('|');
-                if(currPiece != null) {
+                if ((i + j) % 2 == 0) {
+                    out.append("\u001b[37;40m");
+                }
+                else {
+                    out.append("\u001b[30;107m");
+                }
+                if (currPiece != null) {
                     out.append(getPiece(currPos).toString());
                 }
                 else {
-                    out.append(" ");
+                    out.append("   ");
                 }
-                if(j == 8) {out.append('|');}
             }
-            out.append('\n');
+            out.append("\u001b[39;49m");
+            out.append("\n");
         }
+        out.append("\u001b[39;49m");
+        out.append("\n");
         return out.toString();
     }
 

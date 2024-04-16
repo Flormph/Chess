@@ -30,6 +30,19 @@ public class Util {
         Util.game = game;
     }
 
+    public static Records.GameData getGame() {
+        return game;
+    }
+
+    public static void setBoard() {
+        if(game != null) {
+            game.game().resetBoard();
+        }
+        else {
+            System.out.println("No current game");
+        }
+    }
+
     public static String[] convertWords(String line) {
         if (line == null || line.isEmpty()) {
             return null;

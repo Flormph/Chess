@@ -20,7 +20,7 @@ public class ChessGame {
     HashSet<ChessPosition> dummyBlackPieces = new HashSet<ChessPosition>();
 
     public ChessGame() {
-
+        resetBoard();
     }
 
     /**
@@ -270,7 +270,7 @@ public class ChessGame {
         checkBoardPieces();
     }
 
-    public void resetBoard(ChessBoard board) {
+    public void resetBoard() {
         board.resetBoard();
         checkBoardPieces();
     }
@@ -331,6 +331,15 @@ public class ChessGame {
     @Override
     public int hashCode() {
         return Objects.hash(currTeam, board, whitePieces, blackPieces);
+    }
+
+    @Override
+    public String toString() {
+        String out = "";
+        out += "Turn:\t\t\t" + currTeam + '\n';
+        out += "\u001b[39;49;0m";
+        out += board.toString();
+        return out;
     }
 
 

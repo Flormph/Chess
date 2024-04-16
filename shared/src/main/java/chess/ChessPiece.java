@@ -586,23 +586,23 @@ public class ChessPiece {
     public String toString() {
         if(teamColor == ChessGame.TeamColor.BLACK) {
             return switch (pieceType) {
-                case KING -> "k";
-                case QUEEN -> "q";
-                case BISHOP -> "b";
-                case KNIGHT -> "n";
-                case ROOK -> "r";
-                case PAWN -> "p";
+                case KING -> " ♚ ";
+                case QUEEN -> " ♛ ";
+                case BISHOP -> " ♝ ";
+                case KNIGHT -> " ♞ ";
+                case ROOK -> " ♜ ";
+                case PAWN -> " ♟ ";
                 default -> " ";
             };
         }
         else if(teamColor == ChessGame.TeamColor.WHITE) {
             return switch (pieceType) {
-                case KING -> "K";
-                case QUEEN -> "Q";
-                case BISHOP -> "B";
-                case KNIGHT -> "N";
-                case ROOK -> "R";
-                case PAWN -> "P";
+                case KING -> " ♔ ";
+                case QUEEN -> " ♕ ";
+                case BISHOP -> " ♗ ";
+                case KNIGHT -> " ♘ ";
+                case ROOK -> " ♖ ";
+                case PAWN -> " ♙ ";
                 default -> " ";
             };
         }

@@ -2,6 +2,7 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import model.Records;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -53,16 +54,18 @@ public class Ui {
                     break;
                 case "create":
                     CreateGame.createGame(command, Util.getPort());
+                    Util.setBoard();
                     displayPostLoginUI();
                     break;
                 case "list":
-                    for(ChessGame l : Objects.requireNonNull(ListGames.listGames(Util.getPort()))) {
-                        System.out.print(l.getBoard().toString());
+                    for(Records.GameData l : Objects.requireNonNull(ListGames.listGames(Util.getPort()))) {
+                        System.out.print(l.toString());
                     }
                     displayPostLoginUI();
                     break;
                 case "join":
                     JoinGame.joinGame(command, Util.getPort());
+                    displayGame();
                     displayPostLoginUI();
                     break;
                 case "observe":
@@ -96,5 +99,15 @@ public class Ui {
         }
         System.out.println("quit - playing chess");
         System.out.println("help - with possible commands");
+    }
+
+    private static void displayGame() {
+        if(Util.getGame() == null) {
+            System.out.println("No active game");
+        }
+        else {
+            Records.GameData game = Util.getGame();
+            System.out.println(game);
+        }
     }
 }

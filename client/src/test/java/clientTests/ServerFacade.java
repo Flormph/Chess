@@ -1,5 +1,9 @@
 package clientTests;
 
+import chess.ChessGame;
+
+import java.util.HashSet;
+
 public class ServerFacade {
     ServerFacade(int port) {
         this.port = port;
@@ -7,10 +11,10 @@ public class ServerFacade {
 
     int port;
 
-    public int register(String command, int port) throws Exception{
+    public String register(String command, int port) throws Exception{
         return ui.Register.register(command, port);
     }
-    public int login(String command, int port) throws Exception{
+    public String login(String command, int port) throws Exception{
         return ui.Login.login(command, port);
     }
 
@@ -22,8 +26,8 @@ public class ServerFacade {
         return ui.CreateGame.createGame(command, port);
     }
 
-    public int listGames(int port) throws Exception{
-        return ui.ListGames.listGames(port);
+    public boolean listGames(int port) throws Exception{
+        return ui.ListGames.listGames(port) != null;
     }
 
     public int joinGame(String command, int port) throws Exception{

@@ -1,15 +1,21 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Map;
 
 public class ListGames {
-    public static int listGames(int port) throws Exception {
+    public static HashSet<ChessGame> listGames(int port) throws Exception {
         URI uri = new URI("http://localhost:" + port + "/game");
         HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
         System.out.println("Game created successfully!");
@@ -26,7 +32,12 @@ public class ListGames {
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                 responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                System.out.println(responseBody);
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+                JsonArray array = jsonObject.getAsJsonArray("games");
+                Type setType = new TypeToken<HashSet<ChessGame>>() {}.getType();
+
+                return gson.fromJson(array,setType);
             }
         }
         else {
@@ -37,6 +48,6 @@ public class ListGames {
                 System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
             }
         }
-        return http.getResponseCode();
+        return null;
     }
 }

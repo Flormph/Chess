@@ -11,7 +11,7 @@ import java.util.Map;
 import static ui.Util.convertWords;
 
 public class CreateGame {
-    public static int createGame(String line, int port) throws Exception{
+    public static ChessGame createGame(String line, int port) throws Exception{
         String[] words = convertWords(line);
         if(words.length == 2) {
             URI uri = new URI("http://localhost:" + port + "/game");

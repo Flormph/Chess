@@ -5,7 +5,6 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import ui.Util;
 
-
 public class ServerFacadeTests {
 
     private static Server tempserver;
@@ -49,14 +48,14 @@ public class ServerFacadeTests {
 
     @Test
     void register() throws Exception {
-        int serverResponse = facade.register("register Joseph Pass Lee", facade.port);
-        Assertions.assertEquals(200, serverResponse);
+        String serverResponse = facade.register("register Joseph Pass Lee", facade.port);
+        Assertions.assertNotEquals(null, serverResponse);
     }
 
     @Test
     void badRegister() throws Exception {
-        int serverResponse = facade.register("register Joseph PassLee", facade.port);
-        Assertions.assertNotEquals(200, serverResponse);
+        String serverResponse = facade.register("register Joseph PassLee", facade.port);
+        Assertions.assertNull(serverResponse);
     }
 
     @Test
@@ -83,8 +82,8 @@ public class ServerFacadeTests {
         registerExistingUser();
         Util.setToken(existingAuth);
         facade.logout(facade.port);
-        int serverResponse = facade.login("login " + existingUsername + " " + existingPass, facade.port);
-        Assertions.assertEquals(200, serverResponse);
+        String serverResponse = facade.login("login " + existingUsername + " " + existingPass, facade.port);
+        Assertions.assertNotEquals(null, serverResponse);
     }
 
     @Test
@@ -142,8 +141,8 @@ public class ServerFacadeTests {
         registerExistingUser();
         Util.setToken(existingAuth);
         createExistingGame();
-        int serverResponse = facade.listGames(facade.port);
-        Assertions.assertEquals(200, serverResponse);
+        boolean serverResponse = facade.listGames(facade.port);
+        Assertions.assertTrue(serverResponse);
     }
 
     @Test

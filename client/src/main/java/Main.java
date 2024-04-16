@@ -9,6 +9,9 @@ public class Main {
         if(args.length == 2) {
             Util.port = Integer.parseInt(args[1]);
         }
+        else {
+            Util.port = 8080;
+        }
         Ui.displayPreLoginUI();
     }
 }

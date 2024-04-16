@@ -1,23 +1,19 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Ui {
-    public static Ui ui;
     private static final Scanner scanner = new Scanner(System.in);
-
-
     public static void displayPreLoginUI() throws Exception{
-        while (true) {
-            if(Util.getToken() == null) {
-                System.out.print("[LOGGED_OUT] >>> ");
-            }
-            else {
-                displayPostLoginUI();
-            }
-            String command = scanner.nextLine().toLowerCase();
+        while (Util.getToken() == null) {
+            System.out.print("[LOGGED_OUT] >>> ");
+            String command = scanner.nextLine();
             String[] words = command.trim().split("\\s+");
-            switch (words[0]) {
+            switch (words[0].toLowerCase()) {
                 case "help":
                     displayHelp();
                     displayPreLoginUI();
@@ -43,24 +39,26 @@ public class Ui {
     static void displayPostLoginUI() throws Exception{
         while (Util.getToken() != null) {
             System.out.print("[LOGGED_IN] >>> ");
-            String command = scanner.nextLine().toLowerCase();
+            String command = scanner.nextLine();
             String[] words = command.trim().split("\\s");
-            switch (words[0]) {
+            switch (words[0].toLowerCase()) {
                 case "help":
                     displayHelp();
                     displayPostLoginUI();
                     break;
                 case "logout":
                     Logout.logout(Util.getPort());
+                    Util.setToken(null);
                     displayPreLoginUI();
                     break;
                 case "create":
                     CreateGame.createGame(command, Util.getPort());
                     displayPostLoginUI();
-
                     break;
                 case "list":
-                    ListGames.listGames(Util.getPort());
+                    for(ChessGame l : Objects.requireNonNull(ListGames.listGames(Util.getPort()))) {
+                        System.out.print(l.getBoard().toString());
+                    }
                     displayPostLoginUI();
                     break;
                 case "join":
@@ -73,6 +71,7 @@ public class Ui {
                     break;
                 case "quit":
                     Quit.quit(Util.getPort());
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Invalid command. Please try again.");

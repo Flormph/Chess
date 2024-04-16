@@ -47,14 +47,14 @@ public class Service extends server.extenders.Service{
         else {
             if(Objects.equals(request.playerColor, ChessGame.TeamColor.WHITE)) {
                 gameDAO.setWhitePlayer(ID, username);
-                return new Response();
+                return new Response(gameDAO.getGame(ID));
             }
             else if(Objects.equals(request.playerColor, ChessGame.TeamColor.BLACK)) {
                 gameDAO.setBlackPlayer(ID, username);
-                return new Response();
+                return new Response(gameDAO.getGame(ID));
             }
             else {
-                return new Response();
+                return new Response(gameDAO.getGame(ID));
             }
         }
     }

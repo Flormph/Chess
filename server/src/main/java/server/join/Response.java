@@ -1,5 +1,7 @@
 package server.join;
 
+import model.Records;
+
 public class Response extends server.extenders.Response{
     public Response() {super();}
     /**
@@ -9,5 +11,6 @@ public class Response extends server.extenders.Response{
     public Response(String errorMessage) {
         super(errorMessage);
     }
+    public Response(Records.GameData game) {super(game); }
 
 }

@@ -49,12 +49,19 @@ public class Response {
         this.message = null;
         this.games = games;
     }
+
+    protected Response(Records.GameData game) {
+        successful = true;
+        this.message = null;
+        this.gameData = game;
+    }
     boolean successful;
     String message;
     String username;
     public String authToken;
     public String gameID;
     HashSet<Records.GameData> games;
+    Records.GameData gameData;
 
     public String getMessage() {
         return message;

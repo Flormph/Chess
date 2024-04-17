@@ -1,9 +1,11 @@
 package ui;
 
+import model.Records;
+
 import static ui.JoinGame.joinGame;
 
 public class JoinObserver {
-    public static int joinObserver(String line, int port) throws Exception {
+    public static Records.GameData joinObserver(String line, int port) throws Exception {
         return joinGame(line, port);
     }
 }

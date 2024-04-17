@@ -584,30 +584,14 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        if(teamColor == ChessGame.TeamColor.BLACK) {
-            return switch (pieceType) {
-                case KING -> " ♚ ";
-                case QUEEN -> " ♛ ";
-                case BISHOP -> " ♝ ";
-                case KNIGHT -> " ♞ ";
-                case ROOK -> " ♜ ";
-                case PAWN -> " ♟ ";
-                default -> " ";
-            };
-        }
-        else if(teamColor == ChessGame.TeamColor.WHITE) {
-            return switch (pieceType) {
-                case KING -> " ♔ ";
-                case QUEEN -> " ♕ ";
-                case BISHOP -> " ♗ ";
-                case KNIGHT -> " ♘ ";
-                case ROOK -> " ♖ ";
-                case PAWN -> " ♙ ";
-                default -> " ";
-            };
-        }
-        else {
-            return "";
-        }
+        return switch (pieceType) {
+            case KING -> " K ";
+            case QUEEN -> " Q ";
+            case BISHOP -> " B ";
+            case KNIGHT -> " N ";
+            case ROOK -> " R ";
+            case PAWN -> " P ";
+            default -> " ";
+        };
     }
 }

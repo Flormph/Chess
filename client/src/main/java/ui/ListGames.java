@@ -17,35 +17,40 @@ import java.util.Map;
 
 public class ListGames {
     public static HashSet<Records.GameData> listGames(int port) throws Exception {
-        URI uri = new URI("http://localhost:" + port + "/game");
-        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-        http.setRequestMethod("GET");
-        http.setRequestProperty("authorization", Util.getToken());
-        http.setDoOutput(true);
+        try {
+            URI uri = new URI("http://localhost:" + port + "/game");
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            http.setRequestMethod("GET");
+            http.setRequestProperty("authorization", Util.getToken());
+            http.setDoOutput(true);
 
-        http.connect();
+            http.connect();
 
-        String responseBody;
+            String responseBody;
 
-        if(http.getResponseCode() == 200) {
-            System.out.println("\u001b[1mList of games:\n");
-            try (InputStream respBody = http.getInputStream()) {
-                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                Gson gson = new Gson();
-                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-                JsonArray array = jsonObject.getAsJsonArray("games");
-                Type setType = new TypeToken<HashSet<Records.GameData>>() {}.getType();
-                return gson.fromJson(array, setType);
+            if (http.getResponseCode() == 200) {
+                System.out.println("\u001b[1mList of games:\n");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+                    JsonArray array = jsonObject.getAsJsonArray("games");
+                    Type setType = new TypeToken<HashSet<Records.GameData>>() {
+                    }.getType();
+                    return gson.fromJson(array, setType);
+                }
+            } else {
+                System.out.println("Failed to retrieve list of games:");
+                try (InputStream respBody = http.getInputStream()) {
+                    InputStreamReader inputStreamReader = new InputStreamReader(respBody);
+                    responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                }
             }
         }
-        else {
-            System.out.println("Failed to retrieve list of games:");
-            try (InputStream respBody = http.getInputStream()) {
-                InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
-            }
+        catch(Exception e) {
+            System.out.print(e.getMessage());
         }
         return null;
     }

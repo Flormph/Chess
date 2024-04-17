@@ -1,6 +1,7 @@
 package clientTests;
 
 import chess.ChessGame;
+import model.Records;
 
 import java.util.HashSet;
 
@@ -30,11 +31,11 @@ public class ServerFacade {
         return ui.ListGames.listGames(port) != null;
     }
 
-    public int joinGame(String command, int port) throws Exception{
+    public Records.GameData joinGame(String command, int port) throws Exception{
         return ui.JoinGame.joinGame(command, port);
     }
 
-    public int joinObserver(String command, int port) throws Exception {
+    public Records.GameData joinObserver(String command, int port) throws Exception {
         return ui.JoinObserver.joinObserver(command, port);
     }
 

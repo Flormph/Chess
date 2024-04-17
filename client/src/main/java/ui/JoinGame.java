@@ -13,7 +13,7 @@ import java.util.Map;
 import static ui.Util.convertWords;
 
 public class JoinGame {
-    public static int joinGame(String line, int port) throws Exception {
+    public static Records.GameData joinGame(String line, int port) throws Exception {
         String[] words = convertWords(line);
         if(words.length == 3) {
             try {
@@ -42,6 +42,7 @@ public class JoinGame {
                         Records.GameData game = new Gson().fromJson(inputStreamReader, Records.GameData.class);
                         Util.setGame(game);
                         System.out.println("Joined game successfully!");
+                        return game;
                     }
                     catch(Exception e) {
                         System.out.print(e.getMessage());
@@ -54,7 +55,7 @@ public class JoinGame {
                         System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                     }
                 }
-                return http.getResponseCode();
+                return null;
             }
             catch(Exception e) {
                 System.out.print(e.getMessage());
@@ -86,6 +87,7 @@ public class JoinGame {
                         Records.GameData game = new Gson().fromJson(inputStreamReader, Records.GameData.class);
                         Util.setGame(game);
                         System.out.println("Joined game successfully!");
+                        return game;
                     }
                     catch(Exception e) {
                         System.out.print(e.getMessage());
@@ -98,7 +100,7 @@ public class JoinGame {
                         System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
                     }
                 }
-                return http.getResponseCode();
+                return null;
             }
             catch(Exception e) {
                 System.out.print(e.getMessage());
@@ -107,6 +109,6 @@ public class JoinGame {
         else {
             System.out.println("Invalid command. Please try again.");
         }
-        return 0;
+        return null;
     }
 }

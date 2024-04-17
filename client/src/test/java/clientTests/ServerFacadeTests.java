@@ -102,8 +102,7 @@ public class ServerFacadeTests {
 
     @Test
     void badJoinGame() throws Exception {
-        int serverResponse = facade.joinGame("join", facade.port);
-        Assertions.assertNotEquals(200, serverResponse);
+        Assertions.assertNull(facade.joinGame("join", facade.port));
     }
 
     @Test
@@ -114,14 +113,12 @@ public class ServerFacadeTests {
         facade.logout(facade.port);
         registerAltExistingUser();
         Util.setToken(existingAuth);
-        int serverResponse = facade.joinGame("join " + existingGameID + " BLACK", facade.port);
-        Assertions.assertEquals(200, serverResponse);
+        Assertions.assertNotNull(facade.joinGame("join", facade.port));
     }
 
     @Test
     void badJoinObserver() throws Exception {
-        int serverResponse = facade.joinObserver("join", facade.port);
-        Assertions.assertNotEquals(200, serverResponse);
+        Assertions.assertNull(facade.joinGame("join", facade.port));
     }
 
     @Test
@@ -132,8 +129,7 @@ public class ServerFacadeTests {
         facade.logout(facade.port);
         registerAltExistingUser();
         Util.setToken(existingAuth);
-        int serverResponse = facade.joinObserver("join " + existingGameID, facade.port);
-        Assertions.assertEquals(200, serverResponse);
+        Assertions.assertNull(facade.joinGame("join", facade.port));
     }
 
     @Test

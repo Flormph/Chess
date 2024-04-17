@@ -142,6 +142,41 @@ public class ChessBoard {
     public String toString() {
         StringBuilder out = new StringBuilder();
         out.append("\u001b[30;100m");
+        out.append("    H  G  F  E  D  C  B  A ");
+        out.append("\u001b[49m");
+        out.append("\n");
+        for(int i = 1; i <= 8; ++i) {
+            for(int j = 8; j > 0; --j) {
+                if (j == 8) {
+                    out.append("\u001b[30;100m");
+                    out.append(" ").append(i).append(" ");
+                }
+                ChessPosition currPos = new ChessPosition(i, j);
+                ChessPiece currPiece = getPiece(currPos);
+                if ((i + j) % 2 == 0) {
+                    out.append("\u001b[40m");
+                }
+                else {
+                    out.append("\u001b[107m");
+                }
+                if (currPiece != null) {
+                    if(currPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                        out.append("\u001b[31m");
+                    }
+                    else {
+                        out.append("\u001b[34m");
+                    }
+                    out.append(getPiece(currPos).toString());
+                }
+                else {
+                    out.append("   ");
+                }
+            }
+            out.append("\u001b[39;49m");
+            out.append("\n");
+        }
+        out.append("\u001b[49m                           \n");
+        out.append("\u001b[30;100m");
         out.append("    A  B  C  D  E  F  G  H ");
         out.append("\u001b[49m");
         out.append("\n");
@@ -154,12 +189,18 @@ public class ChessBoard {
                 ChessPosition currPos = new ChessPosition(i, j);
                 ChessPiece currPiece = getPiece(currPos);
                 if ((i + j) % 2 == 0) {
-                    out.append("\u001b[37;40m");
+                    out.append("\u001b[40m");
                 }
                 else {
-                    out.append("\u001b[30;107m");
+                    out.append("\u001b[107m");
                 }
                 if (currPiece != null) {
+                    if(currPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                        out.append("\u001b[31m");
+                    }
+                    else {
+                        out.append("\u001b[34m");
+                    }
                     out.append(getPiece(currPos).toString());
                 }
                 else {

@@ -1,7 +1,5 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
 import model.Records;
 
 import java.util.Objects;
@@ -9,6 +7,7 @@ import java.util.Scanner;
 
 public class Ui {
     private static final Scanner scanner = new Scanner(System.in);
+
     public static void displayPreLoginUI() throws Exception{
         while (Util.getToken() == null) {
             System.out.print("[LOGGED_OUT] >>> ");
@@ -38,6 +37,8 @@ public class Ui {
     }
 
     static void displayPostLoginUI() throws Exception{
+        Records.GameData game;
+        Records.GameData tempgame;
         while (Util.getToken() != null) {
             System.out.print("[LOGGED_IN] >>> ");
             String command = scanner.nextLine();
@@ -63,13 +64,10 @@ public class Ui {
                     }
                     displayPostLoginUI();
                     break;
-                case "join":
-                    JoinGame.joinGame(command, Util.getPort());
-                    displayGame();
-                    displayPostLoginUI();
-                    break;
-                case "observe":
-                    JoinObserver.joinObserver(command, Util.getPort());
+                case "join", "observe":
+                    tempgame = JoinGame.joinGame(command, Util.getPort());
+                    game = new Records.GameData(Objects.requireNonNull(tempgame).gameID(), tempgame.whiteUsername(), tempgame.blackUsername(), tempgame.gameName(), tempgame.game());
+                    displayGame(game);
                     displayPostLoginUI();
                     break;
                 case "quit":
@@ -101,12 +99,11 @@ public class Ui {
         System.out.println("help - with possible commands");
     }
 
-    private static void displayGame() {
-        if(Util.getGame() == null) {
+    private static void displayGame(Records.GameData game) {
+        if(game == null) {
             System.out.println("No active game");
         }
         else {
-            Records.GameData game = Util.getGame();
             System.out.println(game);
         }
     }

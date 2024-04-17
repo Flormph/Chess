@@ -40,7 +40,9 @@ public class Register {
                         responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
                         Gson gson = new Gson();
                         JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-                        Util.setToken(jsonObject.get("authToken").getAsString());
+                        String token = jsonObject.get("authToken").getAsString();
+                        Util.setToken(token);
+                        return token;
                     }
                 } else {
                     System.out.println("Failed to register user");

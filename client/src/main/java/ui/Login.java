@@ -47,20 +47,17 @@ public class Login {
                     try (InputStream respBody = http.getInputStream()) {
                         InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                         responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                        System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                        throw new Exception("Error: " + http.getResponseCode() + " " + responseBody);
                     }
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
-                System.out.println(e.getMessage());
-                return null;
+                throw e;
             }
         }
         else {
             System.out.println("Invalid command. Please try again.");
             return null;
         }
-        return null;
     }
 }

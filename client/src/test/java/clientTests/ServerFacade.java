@@ -3,8 +3,6 @@ package clientTests;
 import chess.ChessGame;
 import model.Records;
 
-import java.util.HashSet;
-
 public class ServerFacade {
     ServerFacade(int port) {
         this.port = port;
@@ -42,4 +40,4 @@ public class ServerFacade {
     public int quit(int port) throws Exception {
         return ui.Quit.quit(port);
     }
- }
+}

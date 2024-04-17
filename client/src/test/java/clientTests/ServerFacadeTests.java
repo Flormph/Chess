@@ -1,9 +1,12 @@
 package clientTests;
 
+import model.Records;
 import server.clearapplication.*;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.Util;
+
+import java.net.HttpURLConnection;
 
 public class ServerFacadeTests {
 
@@ -113,12 +116,12 @@ public class ServerFacadeTests {
         facade.logout(facade.port);
         registerAltExistingUser();
         Util.setToken(existingAuth);
-        Assertions.assertNotNull(facade.joinGame("join", facade.port));
+        Assertions.assertNotNull(facade.joinGame("join " + existingGameID, facade.port));
     }
 
     @Test
     void badJoinObserver() throws Exception {
-        Assertions.assertNull(facade.joinGame("join", facade.port));
+        Assertions.assertNull(facade.joinGame("join " + existingGameID, facade.port));
     }
 
     @Test
@@ -143,7 +146,8 @@ public class ServerFacadeTests {
 
     @Test
     void badListGames() {
-        Assertions.assertThrows(java.io.IOException.class, () -> facade.listGames(facade.port));
+        Util.setToken("INVALID_TOKEN");
+        Assertions.assertThrows(Exception.class, () -> facade.listGames(facade.port));
     }
 
     @Test

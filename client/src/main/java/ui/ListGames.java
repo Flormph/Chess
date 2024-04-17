@@ -45,13 +45,12 @@ public class ListGames {
                 try (InputStream respBody = http.getInputStream()) {
                     InputStreamReader inputStreamReader = new InputStreamReader(respBody);
                     responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
-                    System.out.println("Error: " + http.getResponseCode() + " " + responseBody);
+                    throw new Exception("Error: " + http.getResponseCode() + " " + responseBody);
                 }
             }
         }
         catch(Exception e) {
-            System.out.print(e.getMessage());
+            throw e;
         }
-        return null;
     }
 }

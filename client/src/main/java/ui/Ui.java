@@ -65,8 +65,7 @@ public class Ui {
                     displayPostLoginUI();
                     break;
                 case "join", "observe":
-                    JoinGame.joinGame(command, Util.getPort());
-                    game = Util.getGame();
+                    game = JoinGame.joinGame(command, Util.getPort());
                     displayGame(game);
                     displayPostLoginUI();
                     break;
@@ -104,7 +103,7 @@ public class Ui {
             System.out.println("No active game");
         }
         else {
-            System.out.println(game);
+            System.out.println(game.game());
         }
     }
 }

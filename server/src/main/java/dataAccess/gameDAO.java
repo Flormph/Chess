@@ -12,6 +12,8 @@ import java.util.HashSet;
 
 public class gameDAO {
     public static int createGame(Records.GameData game) throws DataAccessException{
+        DatabaseManager.createDatabase();
+        DatabaseManager.createTables();
         Gson serializer = new Gson();
         String gameJson = serializer.toJson(game.game());
 

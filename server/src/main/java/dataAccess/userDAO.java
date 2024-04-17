@@ -11,6 +11,8 @@ import java.sql.SQLException;
 public class userDAO {
 
     public static String createUser(Records.UserData user) throws DataAccessException {
+        DatabaseManager.createDatabase();
+        DatabaseManager.createTables();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(user.password());
         try (var conn = DatabaseManager.getConnection()) {

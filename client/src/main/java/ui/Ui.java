@@ -65,8 +65,8 @@ public class Ui {
                     displayPostLoginUI();
                     break;
                 case "join", "observe":
-                    tempgame = JoinGame.joinGame(command, Util.getPort());
-                    game = new Records.GameData(Objects.requireNonNull(tempgame).gameID(), tempgame.whiteUsername(), tempgame.blackUsername(), tempgame.gameName(), tempgame.game());
+                    JoinGame.joinGame(command, Util.getPort());
+                    game = Util.getGame();
                     displayGame(game);
                     displayPostLoginUI();
                     break;

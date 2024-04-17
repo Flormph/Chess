@@ -2,6 +2,7 @@ package ui;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import model.*;
 
 import java.io.InputStream;
@@ -39,10 +40,12 @@ public class JoinGame {
                 if (http.getResponseCode() == 200) {
                     try (InputStream respBody = http.getInputStream()) {
                         InputStreamReader inputStreamReader = new InputStreamReader(respBody);
-                        Records.GameData game = new Gson().fromJson(inputStreamReader, Records.GameData.class);
-                        Util.setGame(game);
+                        responseBody = new Gson().fromJson(inputStreamReader, Map.class).toString();
+                        Gson gson = new Gson();
+                        JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+                        Util.setGame(gson.fromJson(jsonObject.get("gameData").getAsString(), Records.GameData.class));
                         System.out.println("Joined game successfully!");
-                        return game;
+                        return Util.getGame();
                     }
                     catch(Exception e) {
                         System.out.print(e.getMessage());

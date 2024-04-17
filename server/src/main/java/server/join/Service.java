@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataAccess.DataAccessException;
 import dataAccess.authDAO;
 import dataAccess.gameDAO;
+import model.Records;
 
 import java.util.Objects;
 
@@ -45,16 +46,17 @@ public class Service extends server.extenders.Service{
             throw new DataAccessException("Error: already taken", 403);
         }
         else {
+            Records.GameData gameData = gameDAO.getGame(ID);
             if(Objects.equals(request.playerColor, ChessGame.TeamColor.WHITE)) {
                 gameDAO.setWhitePlayer(ID, username);
-                return new Response(gameDAO.getGame(ID));
+                return new Response(gameData, gameData.game());
             }
             else if(Objects.equals(request.playerColor, ChessGame.TeamColor.BLACK)) {
                 gameDAO.setBlackPlayer(ID, username);
-                return new Response(gameDAO.getGame(ID));
+                return new Response(gameData, gameData.game());
             }
             else {
-                return new Response(gameDAO.getGame(ID));
+                return new Response(gameData, gameData.game());
             }
         }
     }

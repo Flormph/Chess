@@ -15,10 +15,14 @@ public class authDAO {
      * @return Returns the token associated with the newly logged-in user
      */
     public static String createAuth(String username) throws DataAccessException{
+        DatabaseManager.createDatabase();
+        DatabaseManager.createTables();
         Records.AuthData auth = new Records.AuthData(UUID.randomUUID().toString(), username);
-        if (!username.isEmpty()) {
+        while(hasAuth(auth.authToken())) {
+            auth = new Records.AuthData(UUID.randomUUID().toString(), username);
+        }
+        //if (!username.isEmpty()) {
             try (var conn = DatabaseManager.getConnection()) {
-                if(!hasUser(username)) {
                     try (var preparedStatement = conn.prepareStatement("INSERT INTO tokens (auth, username) VALUES (?, ?)")) {
                         preparedStatement.setString(1, auth.authToken());
                         preparedStatement.setString(2, auth.username());
@@ -27,17 +31,6 @@ public class authDAO {
                             throw new DataAccessException("ERROR: Failed to insert data into table", 500);
                         }
                     }
-                }
-                else {
-                    try (var preparedStatement = conn.prepareStatement("UPDATE tokens SET auth = ? WHERE username = ?")) {
-                        preparedStatement.setString(1, auth.authToken());
-                        preparedStatement.setString(2, auth.username());
-                        int rowsInserted = preparedStatement.executeUpdate();
-                        if (rowsInserted == 0) {
-                            throw new DataAccessException("ERROR: Failed to update data into table", 500);
-                        }
-                    }
-                }
             } catch (SQLException e) {
                 // Print stack trace of the caught SQL exception
                 e.printStackTrace();
@@ -47,18 +40,18 @@ public class authDAO {
                 e.printStackTrace();
                 throw new DataAccessException("Failed to connect to server", 500);
             }
-        }
-        else {
-            throw new DataAccessException("Error: user doesn't exist", 401);
-        }
+        //}
+        //else {
+        //    throw new DataAccessException("Error: user doesn't exist", 401);
+        //}
         return auth.authToken();
     }
 
     public static void deleteAuth(String auth) throws DataAccessException{
         Records.AuthData Auth;
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement("DELETE FROM tokens WHERE username = ?;")) {
-                preparedStatement.setString(1, getAuth(auth));
+            try (var preparedStatement = conn.prepareStatement("DELETE FROM tokens WHERE auth = ?;")) {
+                preparedStatement.setString(1, auth);
                 preparedStatement.executeUpdate();
             }
             catch(Exception e) {
@@ -79,7 +72,7 @@ public class authDAO {
                         return resultSet.getString("username");
                     }
                     else {
-                        throw new DataAccessException("Error: AuthToken does not exist", 401);
+                        return "NOT-LOGGED-USER";
                     }
                 }
             }
@@ -110,14 +103,17 @@ public class authDAO {
 
     public static boolean hasAuth(String auth) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT 1 FROM tokens WHERE auth = ?")) {
+            try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT COUNT(*) FROM tokens WHERE auth = ?")) {
                 preparedStatement.setString(1, auth);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    return resultSet.next();
+                    if (resultSet.next()) {
+                        int count = resultSet.getInt(1);
+                        return count != 0;
+                    }
+                    return false;
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (SQLException e) {
             throw new DataAccessException(e.getMessage(), 500);
         }
     }

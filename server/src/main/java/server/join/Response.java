@@ -1,5 +1,6 @@
 package server.join;
 
+import chess.ChessGame;
 import model.Records;
 
 public class Response extends server.extenders.Response{
@@ -11,6 +12,6 @@ public class Response extends server.extenders.Response{
     public Response(String errorMessage) {
         super(errorMessage);
     }
-    public Response(Records.GameData game) {super(game); }
+    public Response(Records.GameData gameData, ChessGame game) {super(gameData ,game); }
 
 }

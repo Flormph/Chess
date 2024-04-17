@@ -1,5 +1,6 @@
 package server.extenders;
 
+import chess.ChessGame;
 import model.Records;
 import java.util.HashSet;
 
@@ -50,10 +51,11 @@ public class Response {
         this.games = games;
     }
 
-    protected Response(Records.GameData game) {
+    protected Response(Records.GameData gameData, ChessGame game) {
         successful = true;
         this.message = null;
-        this.gameData = game;
+        this.gameData = gameData;
+        this.game = game;
     }
     boolean successful;
     String message;
@@ -62,6 +64,7 @@ public class Response {
     public String gameID;
     HashSet<Records.GameData> games;
     Records.GameData gameData;
+    ChessGame game;
 
     public String getMessage() {
         return message;

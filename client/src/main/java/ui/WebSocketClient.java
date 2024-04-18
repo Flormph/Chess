@@ -3,23 +3,16 @@ package ui;
 import javax.websocket.*;
 import java.net.URI;
 import java.util.Scanner;
+
+import static java.lang.Integer.parseInt;
+
 public class WebSocketClient extends Endpoint{
-
-    public static void main(String[] args) throws Exception {
-        var ws = new WebSocketClient();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter a message you want to echo");
-        while (true) {
-            ws.send(scanner.nextLine());
-        }
-    }
 
     public Session session;
 
 
-    public WebSocketClient() throws Exception {
-        URI uri = new URI("ws://localhost:8080/connect");
+    public WebSocketClient(int port) throws Exception {
+        URI uri = new URI("ws://localhost:"+ port + "/connect");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
 

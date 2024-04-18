@@ -50,6 +50,10 @@ public class Util {
         return line.trim().split("\\s+");
     }
 
+    public static void highlight(Records.GameData game) {
+        return;
+    }
+
     public static int getPort() {
         return port;
     }

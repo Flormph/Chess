@@ -44,6 +44,7 @@ public class Server {
 
         Spark.put("/game", (request, response) -> {
             server.join.Handler handler = new server.join.Handler();
+            Spark.webSocket("/connect", WSServer.class);
             return handler.Handle(request, response);
         });
 
@@ -51,6 +52,7 @@ public class Server {
             server.list.Handler handler = new server.list.Handler();
             return handler.Handle(request, response);
         });
+
 
         // Register your endpoints and handle exceptions here.
 

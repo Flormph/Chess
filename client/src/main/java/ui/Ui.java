@@ -6,6 +6,8 @@ import webSocketMessages.userCommands.*;
 import java.util.Objects;
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 public class Ui {
     private static final Scanner scanner = new Scanner(System.in);
     static boolean inGame = false;
@@ -86,33 +88,40 @@ public class Ui {
             System.out.print("[IN_GAME] >>> ");
             String command = scanner.nextLine();
             String[] words = command.trim().split("\\s");
-            switch (words[0].toLowerCase()) {
-                case "help":
-                    displayHelp();
-                    displayPostLoginUI();
-                    break;
-                case "refresh":
-                    displayGame(game);
-                    displayGameUI(game);
-                    break;
-                case "leave":
-                    //LEAVE GAME WS
-                    displayGameUI(game);
-                    break;
-                case "move":
-                    //MOVE POS 1 TO POS 2
-                    displayGameUI(game);
-                    break;
-                case "resign":
-                    //END GAME
-                    displayGameUI(game);
-                    break;
-                case "highlight":
-                    //HIGHLIGHT POSSIBLE MOVES
-                    displayGameUI(game);
-                    break;
-                default:
-                    System.out.println("Invalid command. Please try again.");
+
+
+            var ws = new WebSocketClient(Util.getPort());
+
+            System.out.println("Enter a message you want to echo");
+            while (true) {
+                switch (words[0].toLowerCase()) {
+                    case "help":
+                        displayHelp();
+                        displayGameUI(game);
+                        break;
+                    case "refresh":
+                        displayGame(game);
+                        displayGameUI(game);
+                        break;
+                    case "leave":
+                        ws.send(UserGameCommand.CommandType.LEAVE.toString());
+                        displayPostLoginUI();
+                        break;
+                    case "move":
+                        ws.send(UserGameCommand.CommandType.MAKE_MOVE.toString() + " " + words[1] + " " + words[2]);
+                        displayGameUI(game);
+                        break;
+                    case "resign":
+                        ws.send(UserGameCommand.CommandType.RESIGN.toString());
+                        displayGameUI(game);
+                        break;
+                    case "highlight":
+                        Util.highlight(game);
+                        displayGameUI(game);
+                        break;
+                    default:
+                        System.out.println("Invalid command. Please try again.");
+                }
             }
         }
     }
